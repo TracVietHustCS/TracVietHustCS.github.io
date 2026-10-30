@@ -54,6 +54,10 @@ a{color:inherit}
 .shelf-zone{padding:20px 0 8px}
 .shelf{display:flex;align-items:flex-end;gap:10px;padding:0 14px;margin:0;list-style:none;min-height:300px}
 .shelf>li{display:block}
+#shelves .shelf{min-height:0;padding:18px 14px 0}
+#shelves .board{margin-bottom:26px}
+#shelves .board:last-of-type{margin-bottom:0}
+@media (max-width:760px){#shelves .shelf{padding:0}}
 .board{height:16px;background:var(--board);border-bottom:4px solid var(--board-edge);border-radius:0 0 6px 6px;margin:0}
 
 .spine{--c:#326ce5;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;
@@ -138,8 +142,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
   </section>
 
   <section class="shelf-zone" aria-label="Kệ tài liệu">
-    <ul class="shelf" id="shelf"></ul>
-    <div class="board" aria-hidden="true"></div>
+    <div id="shelves"></div>
     <div class="panel" id="panel" aria-live="polite"></div>
   </section>
 
@@ -169,13 +172,13 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
    status: "live" (có link) | "soon" (sắp ra mắt) | empty:true (chỗ trống)
    Thêm một dòng nhật ký: thêm vào UPDATES (mới nhất lên đầu). */
 const DOCS = [
-  { title:"Kubernetes", sub:"study notes", status:"live", url:"https://tracviethustcs.github.io/k8s-study-notes/", color:"#326ce5", h:284,
+  { title:"Kubernetes", sub:"study notes", status:"live", url:"https://tracviethustcs.github.io/k8s-study-notes/", color:"#326ce5", h:310,
     meta:"43 trang", tags:["Kubernetes","RKE2 + Rancher","Helm","GitOps","CNI","CSI"],
     desc:"Từ kiến thức nền tảng đến vận hành on-prem: thành phần, workload, mạng, storage, PSA, Helm, Argo CD và Flux, dựng cluster RKE2 + Rancher cùng các công cụ mã nguồn mở đi kèm." },
-  { title:"AWS SAP-C02", sub:"study notes", status:"live", url:"https://tracviethustcs.github.io/aws-sap-study-notes/", color:"#232f3e", h:272,
+  { title:"AWS SAP-C02", sub:"study notes", status:"live", url:"https://tracviethustcs.github.io/aws-sap-study-notes/", color:"#232f3e", h:304,
     meta:"23 trang", tags:["AWS","Solutions Architect Pro","Ôn thi","24 câu luyện"],
     desc:"Ghi chú ôn thi AWS Certified Solutions Architect – Professional theo 4 domain: đa tài khoản, mạng, bảo mật, HA/DR, migration, kèm bảng so sánh dịch vụ, số liệu cần nhớ và câu hỏi luyện tập có giải thích." },
-  { title:"Linux & Network", sub:"study notes", status:"live", url:"https://tracviethustcs.github.io/linux-network-notes/", color:"#a35200", h:304,
+  { title:"Linux & Network", sub:"study notes", status:"live", url:"https://tracviethustcs.github.io/linux-network-notes/", color:"#a35200", h:340,
     meta:"55 trang", tags:["Linux","Hệ điều hành","Network","DevOps","24 câu luyện"],
     desc:"Từ bản chất hệ điều hành (process, bộ nhớ, namespace, cgroup) đến Linux vận hành và mạng (TCP, DNS, TLS, firewall), kèm playbook xử lý sự cố, cheat sheet, câu hỏi phỏng vấn và lộ trình 8 tuần." },
   { title:"Docker", sub:"container notes", status:"live", url:"https://tracviethustcs.github.io/docker-container-notes/", color:"#0b5cad", h:268,
@@ -187,7 +190,7 @@ const DOCS = [
   { title:"CI/CD", sub:"release notes", status:"live", url:"https://tracviethustcs.github.io/cicd-release-notes/", color:"#1a7f4b", h:250,
     meta:"21 trang", tags:["CI/CD","GitHub Actions","GitOps","DORA","12 câu luyện"],
     desc:"Pipeline, GitHub Actions và GitLab CI, kiểm thử, artifact, bảo mật và OIDC, chiến lược phát hành, canary, GitOps, migration database, rollback và đo lường." },
-  { title:"DevSecOps", sub:"kiểm thử tự động", status:"live", url:"https://tracviethustcs.github.io/devsecops-testing-notes/", color:"#b3261e", h:290,
+  { title:"DevSecOps", sub:"kiểm thử tự động", status:"live", url:"https://tracviethustcs.github.io/devsecops-testing-notes/", color:"#b3261e", h:330,
     meta:"17 trang", tags:["DevSecOps","SAST","DAST","SBOM","Auto test","12 câu luyện"],
     desc:"Threat modeling, kiểm thử tự động (đơn vị, API, E2E, tải), quét bí mật, SAST, SCA và SBOM, quét container và IaC, DAST, bảo mật lúc chạy và quản lý lỗ hổng." },
   { title:"DataOps", sub:"notes", status:"live", url:"https://tracviethustcs.github.io/dataops-notes/", color:"#0b7285", h:246,
@@ -231,7 +234,7 @@ const UPDATES = [
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
-$("#shelf").innerHTML = DOCS.map((d,i) => {
+const ITEMS = DOCS.map((d,i) => {
   if (d.empty) return `<li><div class="spine empty" style="--h:${d.h}px" tabindex="0" data-i="${i}"><span class="t">chỗ trống</span></div></li>`;
   const inner = `<span class="t">${esc(d.title)}</span><span class="s">${esc(d.sub)}</span>` +
     `<span class="d">${esc(d.desc)}</span><span class="st">${d.status==="live"?"Mở":"Sắp ra mắt"}</span>`;
@@ -239,7 +242,7 @@ $("#shelf").innerHTML = DOCS.map((d,i) => {
   return d.status === "live"
     ? `<li><a class="spine" style="${style}" href="${esc(d.url)}" data-i="${i}">${inner}</a></li>`
     : `<li><div class="spine soon${d.diary?" diary":""}" style="${style}" tabindex="0" data-i="${i}">${inner}</div></li>`;
-}).join("");
+});
 
 function showPanel(i){
   const d = DOCS[i], p = $("#panel");
@@ -253,11 +256,31 @@ function showPanel(i){
     `<div class="tags">${(d.tags||[]).map(t=>`<span>${esc(t)}</span>`).join("")}</div></div>` +
     (d.status==="live" ? `<a class="open" href="${esc(d.url)}">Mở tài liệu</a>` : `<span class="soon-note">Đang chuẩn bị</span>`);
 }
-document.querySelectorAll(".spine").forEach(el => {
-  const i = +el.dataset.i;
-  el.addEventListener("mouseenter", () => showPanel(i));
-  el.addEventListener("focus", () => showPanel(i));
-});
+/* Kệ tự xuống nhiều tầng khi hết chỗ ngang; mỗi tầng có một tấm ván riêng */
+const shelvesEl = $("#shelves");
+let lastCap = 0;
+function capacity(){
+  if (matchMedia("(max-width:760px)").matches) return ITEMS.length;
+  const w = $(".shelf-zone").clientWidth;
+  return Math.max(1, Math.floor((w - 28 + 10) / 84));
+}
+function renderShelves(){
+  const cap = capacity();
+  if (cap === lastCap && shelvesEl.children.length) return;
+  lastCap = cap;
+  const rows = Math.ceil(ITEMS.length / cap), per = Math.ceil(ITEMS.length / rows);
+  let html = "";
+  for (let i = 0; i < ITEMS.length; i += per)
+    html += `<ul class="shelf">${ITEMS.slice(i, i + per).join("")}</ul><div class="board" aria-hidden="true"></div>`;
+  shelvesEl.innerHTML = html;
+  shelvesEl.querySelectorAll(".spine").forEach(el => {
+    const i = +el.dataset.i;
+    el.addEventListener("mouseenter", () => showPanel(i));
+    el.addEventListener("focus", () => showPanel(i));
+  });
+}
+renderShelves();
+let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(renderShelves, 120); });
 showPanel(DOCS.findIndex(d => d.status==="live"));
 
 $("#log").innerHTML = UPDATES.map(u => `<li><time>${esc(u.date)}</time><span><b>${esc(u.doc)}</b>: ${esc(u.text)}</span></li>`).join("");
