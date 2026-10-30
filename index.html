@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TracViet · Sổ tay hạ tầng, Kubernetes, Claude và những thứ lan man</title>
 <meta name="description" content="Kệ sách tài liệu tự học của TracViet: Kubernetes, Claude và góc chém gió.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23C2255C'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='30' font-weight='800' fill='white' text-anchor='middle'%3Etv%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23B5121B'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='30' font-weight='800' fill='white' text-anchor='middle'%3Etv%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#e9f0ee; --ink:#14262a; --muted:#566a6d; --line:#c3d1ce; --board:#b8c8c4; --board-edge:#9fb1ad;
-  --brand:#c2255c; --brand-ink:#ffffff; --panel:#f6faf9;
+  --bg:#f3f2f2; --ink:#1d1a1b; --muted:#675f60; --line:#dcd6d6; --board:#cfc6c6; --board-edge:#b3a8a9;
+  --brand:#b5121b; --brand-ink:#ffffff; --panel:#ffffff;
   --ui:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
   --voice:"Newsreader",Georgia,"Times New Roman",serif;
   box-sizing:border-box;
@@ -20,13 +20,13 @@
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0d1617; --ink:#e3edeb; --muted:#93a8a8; --line:#243536; --board:#1d2d2f; --board-edge:#2b3f41;
-    --brand:#f06595; --brand-ink:#2a0a16; --panel:#142021; color-scheme:dark;
+    --bg:#141011; --ink:#efe9e9; --muted:#aa9fa0; --line:#2e2527; --board:#2a2022; --board-edge:#3d3033;
+    --brand:#ff6670; --brand-ink:#2a0508; --panel:#1b1517; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0d1617; --ink:#e3edeb; --muted:#93a8a8; --line:#243536; --board:#1d2d2f; --board-edge:#2b3f41;
-  --brand:#f06595; --brand-ink:#2a0a16; --panel:#142021; color-scheme:dark;
+  --bg:#141011; --ink:#efe9e9; --muted:#aa9fa0; --line:#2e2527; --board:#2a2022; --board-edge:#3d3033;
+  --brand:#ff6670; --brand-ink:#2a0508; --panel:#1b1517; color-scheme:dark;
 }
 html{height:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
 *{box-sizing:border-box}
@@ -37,7 +37,7 @@ a{color:inherit}
 .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
 
 /* top bar */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-top:4px solid var(--brand);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;gap:16px;height:60px}
 .mark{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:17px}
 .mark i{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--brand);color:var(--brand-ink);
@@ -162,7 +162,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
 <footer>
   <div class="wrap">
     <span>© <span id="yr"></span> TracViet</span>
-    <span>HTML thuần, host trên GitHub Pages</span>
+    <span>Màu lấy cảm hứng từ Đại học Bách khoa Hà Nội · HTML thuần, host trên GitHub Pages</span>
   </div>
 </footer>
 
