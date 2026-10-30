@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TracViet · Sổ tay hạ tầng, Kubernetes, Claude và những thứ lan man</title>
+<meta name="description" content="Kệ sách tài liệu tự học của TracViet: Kubernetes, Claude và góc chém gió.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23C2255C'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='30' font-weight='800' fill='white' text-anchor='middle'%3Etv%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e9f0ee; --ink:#14262a; --muted:#566a6d; --line:#c3d1ce; --board:#b8c8c4; --board-edge:#9fb1ad;
+  --brand:#c2255c; --brand-ink:#ffffff; --panel:#f6faf9;
+  --ui:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --voice:"Newsreader",Georgia,"Times New Roman",serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1617; --ink:#e3edeb; --muted:#93a8a8; --line:#243536; --board:#1d2d2f; --board-edge:#2b3f41;
+    --brand:#f06595; --brand-ink:#2a0a16; --panel:#142021; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1617; --ink:#e3edeb; --muted:#93a8a8; --line:#243536; --board:#1d2d2f; --board-edge:#2b3f41;
+  --brand:#f06595; --brand-ink:#2a0a16; --panel:#142021; color-scheme:dark;
+}
+html{height:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--brand);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;height:60px}
+.mark{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:17px}
+.mark i{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--brand);color:var(--brand-ink);
+  font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.02em}
+.top .sp{flex:1}
+.top a.l,.top button{font:inherit;font-size:14px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;
+  padding:6px 14px;text-decoration:none;cursor:pointer}
+.top a.l:hover,.top button:hover{color:var(--ink);border-color:var(--muted)}
+
+/* hero */
+.hero{padding:64px 0 28px}
+.hero h1{font-size:clamp(46px,9vw,104px);line-height:.95;letter-spacing:-.04em;font-weight:800;margin:0 0 22px}
+.hero p{font-family:var(--voice);font-size:clamp(20px,2.6vw,26px);line-height:1.4;max-width:34ch;margin:0;color:var(--muted)}
+
+/* shelf */
+.shelf-zone{padding:20px 0 8px}
+.shelf{display:flex;align-items:flex-end;gap:10px;padding:0 14px;margin:0;list-style:none;min-height:300px}
+.shelf>li{display:block}
+.board{height:16px;background:var(--board);border-bottom:4px solid var(--board-edge);border-radius:0 0 6px 6px;margin:0}
+
+.spine{--c:#326ce5;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  width:74px;height:var(--h,260px);padding:16px 0 14px;background:var(--c);color:#fff;border-radius:7px 7px 2px 2px;text-decoration:none;
+  box-shadow:inset -7px 0 0 rgba(0,0,0,.16),inset 2px 0 0 rgba(255,255,255,.2);
+  transition:transform .2s cubic-bezier(.2,.8,.3,1)}
+.spine::before,.spine::after{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(255,255,255,.55)}
+.spine::before{top:30px}.spine::after{bottom:34px}
+.spine .t{writing-mode:vertical-rl;font-weight:700;font-size:21px;letter-spacing:.01em;margin-top:22px;white-space:nowrap}
+.spine .s{writing-mode:vertical-rl;font-size:12px;opacity:.9;margin-bottom:26px;white-space:nowrap}
+.spine .d,.spine .st{display:none}
+a.spine:hover,a.spine:focus-visible,.spine.soon:hover,.spine.soon:focus-visible{transform:translateY(-14px)}
+.spine.soon,.spine.empty{background:transparent;color:var(--muted);border:2px dashed var(--board-edge);box-shadow:none;border-bottom:0;cursor:default}
+.spine.soon::before,.spine.soon::after,.spine.empty::before,.spine.empty::after{background:var(--line)}
+.spine.soon .t{color:var(--ink);opacity:.75}
+.spine.diary{border-radius:7px 14px 2px 2px}
+.spine.diary .t{font-family:var(--voice);font-style:italic;font-weight:500;font-size:24px}
+.spine.empty .t{font-size:13px;font-weight:500;opacity:.7}
+
+/* detail panel */
+.panel{margin:26px 0 0;padding:22px 24px;background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 28px;align-items:end;min-height:150px}
+.panel h2{margin:0;font-size:26px;letter-spacing:-.02em;line-height:1.2}
+.panel .sub{color:var(--muted);font-size:14px;margin:2px 0 8px}
+.panel p{margin:0;max-width:64ch}
+.panel .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.panel .tags span{font-size:12.5px;padding:2px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
+.open{display:inline-block;text-decoration:none;font-weight:600;background:var(--brand);color:var(--brand-ink);padding:11px 20px;border-radius:999px;white-space:nowrap}
+.open:hover{filter:brightness(1.08)}
+.soon-note{color:var(--muted);font-size:14px;white-space:nowrap}
+
+/* sections */
+section.blk{padding:56px 0 0}
+section.blk h2{font-size:22px;letter-spacing:-.01em;margin:0 0 14px}
+.log{list-style:none;margin:0;padding:0;max-width:720px}
+.log li{display:grid;grid-template-columns:104px 1fr;gap:16px;padding:12px 0;border-top:1px solid var(--line)}
+.log time{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.log b{font-weight:600}
+.ramble{margin-top:8px;padding:28px 30px;border:1px dashed var(--board-edge);border-radius:16px;max-width:720px}
+.ramble h2{font-family:var(--voice);font-style:italic;font-weight:500;font-size:30px;margin:0 0 8px}
+.ramble p{font-family:var(--voice);font-size:20px;line-height:1.5;margin:0;color:var(--muted)}
+footer{margin-top:72px;padding:22px 0 40px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between}
+
+/* narrow screens: the shelf becomes a stack of rows */
+@media (max-width:760px){
+  .wrap{padding:0 18px}
+  .hero{padding:40px 0 18px}
+  .shelf{flex-direction:column;align-items:stretch;gap:12px;padding:0;min-height:0}
+  .board{display:none}
+  .spine{width:auto;height:auto;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;padding:16px 18px;border-radius:12px;box-shadow:none;text-align:left}
+  .spine::before,.spine::after{display:none}
+  .spine .t,.spine .s{writing-mode:horizontal-tb;margin:0;white-space:normal}
+  .spine .t{font-size:20px}
+  .spine .s{font-size:13px;flex:1}
+  .spine .d{display:block;flex-basis:100%;font-size:14px;font-weight:400;opacity:.92;margin-top:2px}
+  .spine .st{display:inline-block;font-size:12px;border:1px solid currentColor;border-radius:999px;padding:1px 9px;opacity:.85}
+  .spine{flex-wrap:wrap}
+  a.spine:hover,a.spine:focus-visible,.spine.soon:hover,.spine.soon:focus-visible{transform:none}
+  .spine.soon,.spine.empty{border:2px dashed var(--board-edge)}
+  .spine.empty,.shelf>li:has(.spine.empty){display:none}
+  .panel{display:none}
+  .log li{grid-template-columns:1fr;gap:2px}
+}
+@media (prefers-reduced-motion:reduce){.spine{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="./" aria-label="TracViet, trang chủ"><i>tv</i><span>TracViet</span></a>
+    <span class="sp"></span>
+    <a class="l" href="https://github.com/TracVietHustCS" target="_blank" rel="noopener">GitHub</a>
+    <button id="theme" type="button" aria-label="Đổi giao diện sáng hoặc tối">Sáng/Tối</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>TracViet</h1>
+    <p>Sổ tay của một người làm hạ tầng. Kubernetes, Claude, và những thứ lan man chưa biết xếp vào đâu.</p>
+  </section>
+
+  <section class="shelf-zone" aria-label="Kệ tài liệu">
+    <ul class="shelf" id="shelf"></ul>
+    <div class="board" aria-hidden="true"></div>
+    <div class="panel" id="panel" aria-live="polite"></div>
+  </section>
+
+  <section class="blk" aria-labelledby="h-log">
+    <h2 id="h-log">Nhật ký cập nhật</h2>
+    <ul class="log" id="log"></ul>
+  </section>
+
+  <section class="blk" aria-labelledby="h-ramble">
+    <div class="ramble">
+      <h2 id="h-ramble">Góc lan man</h2>
+      <p>Chỗ dành cho những bài ngắn không nằm trong cuốn sổ nào: một đêm debug, một quyết định kiến trúc đáng tiếc, một ý tưởng chưa chín. Đang dọn chỗ, rồi sẽ có một cuốn riêng trên kệ.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr"></span> TracViet</span>
+    <span>HTML thuần, host trên GitHub Pages</span>
+  </div>
+</footer>
+
+<script>
+/* ===== CẤU HÌNH =====
+   Thêm một cuốn mới lên kệ: thêm một object vào DOCS.
+   status: "live" (có link) | "soon" (sắp ra mắt) | empty:true (chỗ trống)
+   Thêm một dòng nhật ký: thêm vào UPDATES (mới nhất lên đầu). */
+const DOCS = [
+  { title:"Kubernetes", sub:"study notes", status:"live", url:"https://tracviethustcs.github.io/k8s-study-notes/", color:"#326ce5", h:284,
+    meta:"37 trang", tags:["Kubernetes","RKE2 + Rancher","Helm","GitOps","CNI","CSI"],
+    desc:"Từ kiến thức nền tảng đến vận hành on-prem: thành phần, workload, mạng, storage, PSA, Helm, Argo CD và Flux, dựng cluster RKE2 + Rancher cùng các công cụ mã nguồn mở đi kèm." },
+  { title:"Claude", sub:"certifications", status:"soon", color:"#d97757", h:246,
+    tags:["Claude","Kiến trúc","Ôn thi"],
+    desc:"Ghi chú ôn các chứng chỉ Claude, bắt đầu từ Architect – Foundations. Đang chuẩn bị." },
+  { title:"Chém gió", sub:"tâm sự linh tinh", status:"soon", diary:true, color:"#2f9e7a", h:218,
+    tags:["Lan man","Tâm sự"],
+    desc:"Góc viết lan man: suy nghĩ, thất bại, những đêm debug và mọi thứ không biết xếp vào đâu." },
+  { empty:true, h:262 },
+  { empty:true, h:200 }
+];
+const UPDATES = [
+  { date:"30/10/2026", doc:"Kubernetes", text:"Thêm nhóm Setup on-prem (RKE2 + Rancher) và 7 trang công cụ mã nguồn mở." },
+  { date:"30/10/2026", doc:"Kubernetes", text:"Thêm các trang nâng cao: PSA, Helm, GitOps, CNI, CSI và so sánh nền tảng." },
+  { date:"30/10/2026", doc:"Kubernetes", text:"Bản đầu tiên với 17 trang kiến thức nền tảng." }
+];
+
+/* ===== RENDER ===== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+$("#shelf").innerHTML = DOCS.map((d,i) => {
+  if (d.empty) return `<li><div class="spine empty" style="--h:${d.h}px" tabindex="0" data-i="${i}"><span class="t">chỗ trống</span></div></li>`;
+  const inner = `<span class="t">${esc(d.title)}</span><span class="s">${esc(d.sub)}</span>` +
+    `<span class="d">${esc(d.desc)}</span><span class="st">${d.status==="live"?"Mở":"Sắp ra mắt"}</span>`;
+  const style = `--h:${d.h}px;--c:${d.color}`;
+  return d.status === "live"
+    ? `<li><a class="spine" style="${style}" href="${esc(d.url)}" data-i="${i}">${inner}</a></li>`
+    : `<li><div class="spine soon${d.diary?" diary":""}" style="${style}" tabindex="0" data-i="${i}">${inner}</div></li>`;
+}).join("");
+
+function showPanel(i){
+  const d = DOCS[i], p = $("#panel");
+  if (!d) return;
+  if (d.empty){
+    p.innerHTML = `<div><h2>Chỗ trống</h2><p class="sub">Dành cho cuốn tiếp theo</p><p>Còn chỗ trên kệ. Tài liệu mới sẽ xuất hiện ở đây khi sẵn sàng.</p></div>`;
+    return;
+  }
+  p.innerHTML = `<div><h2>${esc(d.title)} <span style="font-weight:400;color:var(--muted)">${esc(d.sub)}</span></h2>` +
+    `<p class="sub">${d.meta?esc(d.meta):(d.status==="soon"?"Sắp ra mắt":"")}</p><p>${esc(d.desc)}</p>` +
+    `<div class="tags">${(d.tags||[]).map(t=>`<span>${esc(t)}</span>`).join("")}</div></div>` +
+    (d.status==="live" ? `<a class="open" href="${esc(d.url)}">Mở tài liệu</a>` : `<span class="soon-note">Đang chuẩn bị</span>`);
+}
+document.querySelectorAll(".spine").forEach(el => {
+  const i = +el.dataset.i;
+  el.addEventListener("mouseenter", () => showPanel(i));
+  el.addEventListener("focus", () => showPanel(i));
+});
+showPanel(DOCS.findIndex(d => d.status==="live"));
+
+$("#log").innerHTML = UPDATES.map(u => `<li><time>${esc(u.date)}</time><span><b>${esc(u.doc)}</b>: ${esc(u.text)}</span></li>`).join("");
+$("#yr").textContent = new Date().getFullYear();
+
+/* ===== THEME ===== */
+const root = document.documentElement;
+try{ const t = localStorage.getItem("tv-theme"); if (t) root.dataset.theme = t; }catch(e){}
+$("#theme").addEventListener("click", () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme:dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try{ localStorage.setItem("tv-theme", root.dataset.theme); }catch(e){}
+});
+</script>
+</body>
+</html>
