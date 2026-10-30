@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TracViet · Sổ tay hạ tầng, Kubernetes, Claude và những thứ lan man</title>
 <meta name="description" content="Kệ sách tài liệu tự học của TracViet: Kubernetes, Claude và góc chém gió.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23C2255C'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='30' font-weight='800' fill='white' text-anchor='middle'%3Etv%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23C2255C'/%3E%3Cg fill='none' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='%23fff' d='M32 32C26 22 20 17 15 17C9.5 17 6 23 6 32S9.5 47 15 47C20 47 26 42 32 32'/%3E%3Cpath stroke='%23fff' stroke-opacity='.62' d='M32 32C38 22 44 17 49 17C54.5 17 58 23 58 32S54.5 47 49 47C44 47 38 42 32 32'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
@@ -40,8 +40,8 @@ a{color:inherit}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;gap:16px;height:60px}
 .mark{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:17px}
-.mark i{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--brand);color:var(--brand-ink);
-  font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.02em}
+.mark i{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--brand);color:var(--brand-ink);overflow:hidden}
+.mark i svg{width:100%;height:100%;display:block}
 .top .sp{flex:1}
 .top a.l,.top button{font:inherit;font-size:14px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;
   padding:6px 14px;text-decoration:none;cursor:pointer}
@@ -127,7 +127,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
 
 <header class="top">
   <div class="wrap">
-    <a class="mark" href="./" aria-label="TracViet, trang chủ"><i>tv</i><span>TracViet</span></a>
+    <a class="mark" href="./" aria-label="TracViet, trang chủ"><i class="lg"><svg viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M32 32C26 22 20 17 15 17C9.5 17 6 23 6 32S9.5 47 15 47C20 47 26 42 32 32"/><path stroke-opacity=".62" d="M32 32C38 22 44 17 49 17C54.5 17 58 23 58 32S54.5 47 49 47C44 47 38 42 32 32"/></svg></i><span>TracViet</span></a>
     <span class="sp"></span>
     <a class="l" href="https://github.com/TracVietHustCS" target="_blank" rel="noopener">GitHub</a>
     <button id="theme" type="button" aria-label="Đổi giao diện sáng hoặc tối">Sáng/Tối</button>
