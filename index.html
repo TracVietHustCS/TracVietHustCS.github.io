@@ -4,172 +4,228 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TracViet · Sổ tay hạ tầng, Kubernetes, Claude và những thứ lan man</title>
-<meta name="description" content="Kệ sách tài liệu tự học của TracViet: Kubernetes, Claude và góc chém gió.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23B5121B'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='30' font-weight='800' fill='white' text-anchor='middle'%3Etv%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Kệ tài liệu tự học của TracViet: Kubernetes, Claude và góc chém gió.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23326CE5'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='30' font-weight='800' fill='white' text-anchor='middle'%3Etv%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f3f2f2; --ink:#1d1a1b; --muted:#675f60; --line:#dcd6d6; --board:#cfc6c6; --board-edge:#b3a8a9;
-  --brand:#b5121b; --brand-ink:#ffffff; --panel:#ffffff;
-  --ui:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --blue:#326ce5; --blue-d:#2455bd; --navbg:#326ce5; --navy:#0a1d4a; --navy2:#12306d;
+  --bg:#ffffff; --alt:#f3f6fd; --ink:#1b2236; --muted:#5a6479; --line:#dfe5f1; --card:#ffffff; --link:#2558c7;
+  --font:"Roboto",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
   --voice:"Newsreader",Georgia,"Times New Roman",serif;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#141011; --ink:#efe9e9; --muted:#aa9fa0; --line:#2e2527; --board:#2a2022; --board-edge:#3d3033;
-    --brand:#ff6670; --brand-ink:#2a0508; --panel:#1b1517; color-scheme:dark;
+    --navbg:#23469e; --bg:#0e1420; --alt:#121a2a; --ink:#e6ebf5; --muted:#9aa6bd; --line:#232e45; --card:#151e30; --link:#8fb0f7; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#141011; --ink:#efe9e9; --muted:#aa9fa0; --line:#2e2527; --board:#2a2022; --board-edge:#3d3033;
-  --brand:#ff6670; --brand-ink:#2a0508; --panel:#1b1517; color-scheme:dark;
+  --navbg:#23469e; --bg:#0e1420; --alt:#121a2a; --ink:#e6ebf5; --muted:#9aa6bd; --line:#232e45; --card:#151e30; --link:#8fb0f7; color-scheme:dark;
 }
-html{height:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+html{height:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);scroll-behavior:smooth}
 *{box-sizing:border-box}
-body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.6}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
-a{color:inherit}
-:focus-visible{outline:3px solid var(--brand);outline-offset:3px;border-radius:6px}
-.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.65}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--navbg);z-index:40}
+a{color:var(--link)}
+:focus-visible{outline:3px solid #9bbcff;outline-offset:3px;border-radius:6px}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
 
-/* top bar */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-top:4px solid var(--brand);border-bottom:1px solid var(--line)}
-.top .wrap{display:flex;align-items:center;gap:16px;height:60px}
-.mark{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:17px}
-.mark i{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:var(--brand);color:var(--brand-ink);
-  font-style:normal;font-weight:800;font-size:15px;letter-spacing:-.02em}
-.top .sp{flex:1}
-.top a.l,.top button{font:inherit;font-size:14px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;
-  padding:6px 14px;text-decoration:none;cursor:pointer}
-.top a.l:hover,.top button:hover{color:var(--ink);border-color:var(--muted)}
+/* navbar */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;height:60px;background:var(--navbg);color:#fff}
+.nav .wrap{display:flex;align-items:center;gap:22px;height:100%}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:500;font-size:19px}
+.brand i{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#fff;color:var(--blue-d);
+  font-style:normal;font-weight:900;font-size:15px;letter-spacing:-.03em}
+.nav .links{display:flex;gap:22px;font-size:14.5px}
+.nav .links a{color:#fff;text-decoration:none;opacity:.92}
+.nav .links a:hover{opacity:1;text-decoration:underline}
+.nav .sp{flex:1}
+.nav button{font:inherit;font-size:13px;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.5);border-radius:4px;height:32px;padding:0 12px;cursor:pointer}
+.nav button:hover{background:rgba(255,255,255,.14)}
 
 /* hero */
-.hero{padding:64px 0 28px}
-.hero h1{font-size:clamp(46px,9vw,104px);line-height:.95;letter-spacing:-.04em;font-weight:800;margin:0 0 22px}
-.hero p{font-family:var(--voice);font-size:clamp(20px,2.6vw,26px);line-height:1.4;max-width:34ch;margin:0;color:var(--muted)}
+.hero{color:#fff;background:
+  radial-gradient(900px 420px at 85% -5%,rgba(50,108,229,.55),transparent 62%),
+  radial-gradient(600px 300px at 5% 110%,rgba(50,108,229,.28),transparent 60%),
+  linear-gradient(180deg,var(--navy),var(--navy2));
+  padding:76px 0 0;overflow:hidden}
+.hero h1{font-size:clamp(38px,6.2vw,72px);line-height:1.06;letter-spacing:-.02em;font-weight:700;margin:0 0 18px;max-width:16ch}
+.hero p.lead{font-size:clamp(18px,2.2vw,22px);line-height:1.55;color:rgba(255,255,255,.84);max-width:44ch;margin:0 0 30px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:56px}
+.btn{display:inline-block;text-decoration:none;font-weight:500;font-size:15px;padding:12px 22px;border-radius:4px;border:2px solid #fff}
+.btn.pri{background:#fff;color:var(--blue-d)}
+.btn.pri:hover{background:#e6eeff}
+.btn.sec{color:#fff}
+.btn.sec:hover{background:rgba(255,255,255,.14)}
 
-/* shelf */
-.shelf-zone{padding:20px 0 8px}
+/* shelf (inside hero) */
 .shelf{display:flex;align-items:flex-end;gap:10px;padding:0 14px;margin:0;list-style:none;min-height:300px}
 .shelf>li{display:block}
-.board{height:16px;background:var(--board);border-bottom:4px solid var(--board-edge);border-radius:0 0 6px 6px;margin:0}
-
+.board{height:16px;background:rgba(255,255,255,.16);border-bottom:4px solid rgba(255,255,255,.28);margin:0 -2px}
 .spine{--c:#326ce5;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;
   width:74px;height:var(--h,260px);padding:16px 0 14px;background:var(--c);color:#fff;border-radius:7px 7px 2px 2px;text-decoration:none;
-  box-shadow:inset -7px 0 0 rgba(0,0,0,.16),inset 2px 0 0 rgba(255,255,255,.2);
+  box-shadow:inset -7px 0 0 rgba(0,0,0,.2),inset 2px 0 0 rgba(255,255,255,.22);
   transition:transform .2s cubic-bezier(.2,.8,.3,1)}
 .spine::before,.spine::after{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(255,255,255,.55)}
 .spine::before{top:30px}.spine::after{bottom:34px}
-.spine .t{writing-mode:vertical-rl;font-weight:700;font-size:21px;letter-spacing:.01em;margin-top:22px;white-space:nowrap}
-.spine .s{writing-mode:vertical-rl;font-size:12px;opacity:.9;margin-bottom:26px;white-space:nowrap}
-.spine .d,.spine .st{display:none}
-a.spine:hover,a.spine:focus-visible,.spine.soon:hover,.spine.soon:focus-visible{transform:translateY(-14px)}
-.spine.soon,.spine.empty{background:transparent;color:var(--muted);border:2px dashed var(--board-edge);box-shadow:none;border-bottom:0;cursor:default}
-.spine.soon::before,.spine.soon::after,.spine.empty::before,.spine.empty::after{background:var(--line)}
-.spine.soon .t{color:var(--ink);opacity:.75}
+.spine .t{writing-mode:vertical-rl;font-weight:700;font-size:21px;margin-top:22px;white-space:nowrap}
+.spine .s{writing-mode:vertical-rl;font-size:12px;opacity:.92;margin-bottom:26px;white-space:nowrap}
+a.spine:hover,.spine.soon:hover{transform:translateY(-14px)}
+.spine.soon,.spine.empty{background:rgba(255,255,255,.05);color:rgba(255,255,255,.7);border:2px dashed rgba(255,255,255,.34);box-shadow:none;border-bottom:0;cursor:default}
+.spine.soon::before,.spine.soon::after,.spine.empty::before,.spine.empty::after{background:rgba(255,255,255,.22)}
+.spine.soon .t{color:#fff;opacity:.88}
 .spine.diary{border-radius:7px 14px 2px 2px}
-.spine.diary .t{font-family:var(--voice);font-style:italic;font-weight:500;font-size:24px}
-.spine.empty .t{font-size:13px;font-weight:500;opacity:.7}
-
-/* detail panel */
-.panel{margin:26px 0 0;padding:22px 24px;background:var(--panel);border:1px solid var(--line);border-radius:14px;
-  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 28px;align-items:end;min-height:150px}
-.panel h2{margin:0;font-size:26px;letter-spacing:-.02em;line-height:1.2}
-.panel .sub{color:var(--muted);font-size:14px;margin:2px 0 8px}
-.panel p{margin:0;max-width:64ch}
-.panel .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.panel .tags span{font-size:12.5px;padding:2px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
-.open{display:inline-block;text-decoration:none;font-weight:600;background:var(--brand);color:var(--brand-ink);padding:11px 20px;border-radius:999px;white-space:nowrap}
-.open:hover{filter:brightness(1.08)}
-.soon-note{color:var(--muted);font-size:14px;white-space:nowrap}
+.spine.diary .t{font-family:var(--voice);font-style:italic;font-weight:400;font-size:24px}
+.spine.empty .t{font-size:13px;font-weight:400;opacity:.7}
 
 /* sections */
-section.blk{padding:56px 0 0}
-section.blk h2{font-size:22px;letter-spacing:-.01em;margin:0 0 14px}
-.log{list-style:none;margin:0;padding:0;max-width:720px}
-.log li{display:grid;grid-template-columns:104px 1fr;gap:16px;padding:12px 0;border-top:1px solid var(--line)}
-.log time{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
-.log b{font-weight:600}
-.ramble{margin-top:8px;padding:28px 30px;border:1px dashed var(--board-edge);border-radius:16px;max-width:720px}
-.ramble h2{font-family:var(--voice);font-style:italic;font-weight:500;font-size:30px;margin:0 0 8px}
-.ramble p{font-family:var(--voice);font-size:20px;line-height:1.5;margin:0;color:var(--muted)}
-footer{margin-top:72px;padding:22px 0 40px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
-footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between}
+section.blk{padding:72px 0}
+section.alt{background:var(--alt)}
+.blk h2{font-size:clamp(28px,3.4vw,38px);font-weight:500;letter-spacing:-.01em;margin:0 0 8px}
+.blk p.sub{color:var(--muted);font-size:18px;margin:0 0 34px;max-width:60ch}
 
-/* narrow screens: the shelf becomes a stack of rows */
-@media (max-width:760px){
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:22px}
+.card{--c:#326ce5;position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:8px;
+  overflow:hidden;text-decoration:none;color:var(--ink);transition:box-shadow .18s,transform .18s,border-color .18s}
+.card::before{content:"";display:block;height:6px;background:var(--c)}
+.card .in{padding:22px 24px 24px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card h3{margin:0;font-size:24px;font-weight:500;line-height:1.2}
+.card h3 small{display:block;font-size:14px;font-weight:400;color:var(--muted);margin-top:4px}
+.card p{margin:0;color:var(--muted);font-size:15.5px}
+.card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.card .tags span{font-size:12.5px;padding:2px 10px;border-radius:999px;background:var(--alt);border:1px solid var(--line);color:var(--muted)}
+.card .foot{margin-top:auto;padding-top:14px;display:flex;align-items:center;justify-content:space-between;font-size:14px}
+.badge{font-size:12.5px;font-weight:500;padding:3px 10px;border-radius:999px;background:#e5f4ea;color:#1c7a3a}
+.badge.soon{background:#fff3df;color:#a35a00}
+[data-theme="dark"] .badge,:root:not([data-theme="light"]) .badge{}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .badge{background:#133423;color:#6fd197}:root:not([data-theme="light"]) .badge.soon{background:#3a2a10;color:#f0b45a}}
+:root[data-theme="dark"] .badge{background:#133423;color:#6fd197}
+:root[data-theme="dark"] .badge.soon{background:#3a2a10;color:#f0b45a}
+.open{font-weight:500;color:var(--link)}
+a.card:hover{border-color:var(--c);box-shadow:0 10px 30px rgba(20,40,100,.14);transform:translateY(-3px)}
+.card.soon{border-style:dashed;background:transparent}
+.card.soon h3{opacity:.85}
+
+/* log */
+.log{list-style:none;margin:0;padding:0;max-width:760px}
+.log li{display:grid;grid-template-columns:110px 1fr;gap:18px;padding:14px 0;border-top:1px solid var(--line)}
+.log li:last-child{border-bottom:1px solid var(--line)}
+.log time{color:var(--muted);font-size:14.5px;font-variant-numeric:tabular-nums}
+.log b{font-weight:500}
+
+/* ramble */
+.ramble{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;max-width:760px}
+.ramble h2{font-family:var(--voice);font-style:italic;font-weight:400;font-size:clamp(32px,4vw,44px);margin:0}
+.ramble p{font-family:var(--voice);font-size:21px;line-height:1.55;margin:0;color:var(--muted)}
+
+/* footer */
+footer{background:var(--navy);color:rgba(255,255,255,.78);padding:44px 0 48px;font-size:14.5px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:24px 48px;justify-content:space-between;align-items:flex-start}
+footer .brand{font-size:18px}
+footer a{color:rgba(255,255,255,.88)}
+footer .cols{display:flex;gap:48px;flex-wrap:wrap}
+footer h4{margin:0 0 8px;color:#fff;font-weight:500;font-size:14px}
+footer ul{list-style:none;margin:0;padding:0}
+footer li{margin:4px 0}
+footer .fine{flex-basis:100%;border-top:1px solid rgba(255,255,255,.16);padding-top:18px;color:rgba(255,255,255,.62);font-size:13px}
+
+@media (max-width:820px){
+  .nav .links{display:none}
+  .hero{padding-top:48px}
+  .cta{margin-bottom:36px}
+  .shelf-zone{display:none}
+  .hero{padding-bottom:44px}
+  section.blk{padding:52px 0}
   .wrap{padding:0 18px}
-  .hero{padding:40px 0 18px}
-  .shelf{flex-direction:column;align-items:stretch;gap:12px;padding:0;min-height:0}
-  .board{display:none}
-  .spine{width:auto;height:auto;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;padding:16px 18px;border-radius:12px;box-shadow:none;text-align:left}
-  .spine::before,.spine::after{display:none}
-  .spine .t,.spine .s{writing-mode:horizontal-tb;margin:0;white-space:normal}
-  .spine .t{font-size:20px}
-  .spine .s{font-size:13px;flex:1}
-  .spine .d{display:block;flex-basis:100%;font-size:14px;font-weight:400;opacity:.92;margin-top:2px}
-  .spine .st{display:inline-block;font-size:12px;border:1px solid currentColor;border-radius:999px;padding:1px 9px;opacity:.85}
-  .spine{flex-wrap:wrap}
-  a.spine:hover,a.spine:focus-visible,.spine.soon:hover,.spine.soon:focus-visible{transform:none}
-  .spine.soon,.spine.empty{border:2px dashed var(--board-edge)}
-  .spine.empty,.shelf>li:has(.spine.empty){display:none}
-  .panel{display:none}
   .log li{grid-template-columns:1fr;gap:2px}
 }
-@media (prefers-reduced-motion:reduce){.spine{transition:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.spine,.card{transition:none}}
 </style>
 </head>
 <body>
 
-<header class="top">
+<header class="nav">
   <div class="wrap">
-    <a class="mark" href="./" aria-label="TracViet, trang chủ"><i>tv</i><span>TracViet</span></a>
+    <a class="brand" href="./" aria-label="TracViet, trang chủ"><i>tv</i><span>TracViet</span></a>
+    <nav class="links" aria-label="Điều hướng">
+      <a href="#docs">Tài liệu</a>
+      <a href="#updates">Cập nhật</a>
+      <a href="#ramble">Góc lan man</a>
+      <a href="https://github.com/TracVietHustCS" target="_blank" rel="noopener">GitHub</a>
+    </nav>
     <span class="sp"></span>
-    <a class="l" href="https://github.com/TracVietHustCS" target="_blank" rel="noopener">GitHub</a>
     <button id="theme" type="button" aria-label="Đổi giao diện sáng hoặc tối">Sáng/Tối</button>
   </div>
 </header>
 
-<main class="wrap">
-  <section class="hero">
-    <h1>TracViet</h1>
-    <p>Sổ tay của một người làm hạ tầng. Kubernetes, Claude, và những thứ lan man chưa biết xếp vào đâu.</p>
+<section class="hero">
+  <div class="wrap">
+    <h1>Sổ tay hạ tầng của TracViet</h1>
+    <p class="lead">Ghi chú tự học về Kubernetes, Claude và những thứ lan man chưa biết xếp vào đâu. Mỗi cuốn là một site riêng.</p>
+    <div class="cta">
+      <a class="btn pri" id="cta-main" href="#docs">Xem tài liệu</a>
+      <a class="btn sec" href="#updates">Có gì mới</a>
+    </div>
+    <div class="shelf-zone" aria-hidden="true">
+      <ul class="shelf" id="shelf"></ul>
+      <div class="board"></div>
+    </div>
+  </div>
+</section>
+
+<main>
+  <section class="blk" id="docs" aria-labelledby="h-docs">
+    <div class="wrap">
+      <h2 id="h-docs">Tài liệu</h2>
+      <p class="sub">Mỗi tài liệu là một site riêng. Chọn một cuốn để đọc.</p>
+      <div class="grid" id="grid"></div>
+    </div>
   </section>
 
-  <section class="shelf-zone" aria-label="Kệ tài liệu">
-    <ul class="shelf" id="shelf"></ul>
-    <div class="board" aria-hidden="true"></div>
-    <div class="panel" id="panel" aria-live="polite"></div>
+  <section class="blk alt" id="updates" aria-labelledby="h-log">
+    <div class="wrap">
+      <h2 id="h-log">Nhật ký cập nhật</h2>
+      <p class="sub">Những thay đổi gần đây trên các tài liệu.</p>
+      <ul class="log" id="log"></ul>
+    </div>
   </section>
 
-  <section class="blk" aria-labelledby="h-log">
-    <h2 id="h-log">Nhật ký cập nhật</h2>
-    <ul class="log" id="log"></ul>
-  </section>
-
-  <section class="blk" aria-labelledby="h-ramble">
-    <div class="ramble">
-      <h2 id="h-ramble">Góc lan man</h2>
-      <p>Chỗ dành cho những bài ngắn không nằm trong cuốn sổ nào: một đêm debug, một quyết định kiến trúc đáng tiếc, một ý tưởng chưa chín. Đang dọn chỗ, rồi sẽ có một cuốn riêng trên kệ.</p>
+  <section class="blk" id="ramble" aria-labelledby="h-ramble">
+    <div class="wrap">
+      <div class="ramble">
+        <h2 id="h-ramble">Góc lan man</h2>
+        <p>Chỗ dành cho những bài ngắn không nằm trong cuốn sổ nào: một đêm debug, một quyết định kiến trúc đáng tiếc, một ý tưởng chưa chín. Đang dọn chỗ, rồi sẽ có một cuốn riêng.</p>
+      </div>
     </div>
   </section>
 </main>
 
 <footer>
   <div class="wrap">
-    <span>© <span id="yr"></span> TracViet</span>
-    <span>Màu lấy cảm hứng từ Đại học Bách khoa Hà Nội · HTML thuần, host trên GitHub Pages</span>
+    <div>
+      <a class="brand" href="./"><i>tv</i><span>TracViet</span></a>
+      <p style="margin:12px 0 0;max-width:34ch">Ghi chú kỹ thuật và những thứ lan man, viết để nhớ và để chia sẻ.</p>
+    </div>
+    <div class="cols">
+      <div><h4>Tài liệu</h4><ul id="fdocs"></ul></div>
+      <div><h4>Liên kết</h4><ul>
+        <li><a href="https://github.com/TracVietHustCS" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="#updates">Nhật ký cập nhật</a></li>
+      </ul></div>
+    </div>
+    <div class="fine">© <span id="yr"></span> TracViet · HTML thuần, host trên GitHub Pages. Kubernetes là nhãn hiệu của The Linux Foundation, trang này không liên kết chính thức với dự án.</div>
   </div>
 </footer>
 
 <script>
 /* ===== CẤU HÌNH =====
-   Thêm một cuốn mới lên kệ: thêm một object vào DOCS.
-   status: "live" (có link) | "soon" (sắp ra mắt) | empty:true (chỗ trống)
+   Thêm một cuốn mới: thêm một object vào DOCS.
+   status: "live" (có link) | "soon" (sắp ra mắt) | empty:true (chỉ là chỗ trống trên kệ)
    Thêm một dòng nhật ký: thêm vào UPDATES (mới nhất lên đầu). */
 const DOCS = [
   { title:"Kubernetes", sub:"study notes", status:"live", url:"https://tracviethustcs.github.io/k8s-study-notes/", color:"#326ce5", h:284,
@@ -194,35 +250,33 @@ const UPDATES = [
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
-$("#shelf").innerHTML = DOCS.map((d,i) => {
-  if (d.empty) return `<li><div class="spine empty" style="--h:${d.h}px" tabindex="0" data-i="${i}"><span class="t">chỗ trống</span></div></li>`;
-  const inner = `<span class="t">${esc(d.title)}</span><span class="s">${esc(d.sub)}</span>` +
-    `<span class="d">${esc(d.desc)}</span><span class="st">${d.status==="live"?"Mở":"Sắp ra mắt"}</span>`;
+// shelf (decorative shortcut, the cards below are the accessible list)
+$("#shelf").innerHTML = DOCS.map(d => {
+  if (d.empty) return `<li><div class="spine empty" style="--h:${d.h}px"><span class="t">chỗ trống</span></div></li>`;
+  const inner = `<span class="t">${esc(d.title)}</span><span class="s">${esc(d.sub)}</span>`;
   const style = `--h:${d.h}px;--c:${d.color}`;
   return d.status === "live"
-    ? `<li><a class="spine" style="${style}" href="${esc(d.url)}" data-i="${i}">${inner}</a></li>`
-    : `<li><div class="spine soon${d.diary?" diary":""}" style="${style}" tabindex="0" data-i="${i}">${inner}</div></li>`;
+    ? `<li><a class="spine" style="${style}" href="${esc(d.url)}" tabindex="-1" title="${esc(d.title)}">${inner}</a></li>`
+    : `<li><div class="spine soon${d.diary?" diary":""}" style="${style}" title="${esc(d.title)} (sắp ra mắt)">${inner}</div></li>`;
 }).join("");
 
-function showPanel(i){
-  const d = DOCS[i], p = $("#panel");
-  if (!d) return;
-  if (d.empty){
-    p.innerHTML = `<div><h2>Chỗ trống</h2><p class="sub">Dành cho cuốn tiếp theo</p><p>Còn chỗ trên kệ. Tài liệu mới sẽ xuất hiện ở đây khi sẵn sàng.</p></div>`;
-    return;
-  }
-  p.innerHTML = `<div><h2>${esc(d.title)} <span style="font-weight:400;color:var(--muted)">${esc(d.sub)}</span></h2>` +
-    `<p class="sub">${d.meta?esc(d.meta):(d.status==="soon"?"Sắp ra mắt":"")}</p><p>${esc(d.desc)}</p>` +
-    `<div class="tags">${(d.tags||[]).map(t=>`<span>${esc(t)}</span>`).join("")}</div></div>` +
-    (d.status==="live" ? `<a class="open" href="${esc(d.url)}">Mở tài liệu</a>` : `<span class="soon-note">Đang chuẩn bị</span>`);
-}
-document.querySelectorAll(".spine").forEach(el => {
-  const i = +el.dataset.i;
-  el.addEventListener("mouseenter", () => showPanel(i));
-  el.addEventListener("focus", () => showPanel(i));
-});
-showPanel(DOCS.findIndex(d => d.status==="live"));
+// cards
+const real = DOCS.filter(d => !d.empty);
+$("#grid").innerHTML = real.map(d => {
+  const tags = (d.tags||[]).map(t => `<span>${esc(t)}</span>`).join("");
+  const head = `<h3>${esc(d.title)}<small>${esc(d.sub)}</small></h3><p>${esc(d.desc)}</p><div class="tags">${tags}</div>`;
+  const style = `--c:${d.color}`;
+  if (d.status === "live")
+    return `<a class="card" style="${style}" href="${esc(d.url)}"><div class="in">${head}<div class="foot"><span class="badge">${esc(d.meta||"Đang mở")}</span><span class="open">Mở tài liệu</span></div></div></a>`;
+  return `<div class="card soon" style="${style}"><div class="in">${head}<div class="foot"><span class="badge soon">Sắp ra mắt</span></div></div></div>`;
+}).join("");
 
+// hero button goes straight to the first live doc
+const firstLive = real.find(d => d.status === "live");
+if (firstLive){ const b = $("#cta-main"); b.textContent = "Đọc " + firstLive.title + " notes"; b.href = firstLive.url; }
+
+$("#fdocs").innerHTML = real.map(d => d.status==="live"
+  ? `<li><a href="${esc(d.url)}">${esc(d.title)}</a></li>` : `<li>${esc(d.title)} (sắp ra mắt)</li>`).join("");
 $("#log").innerHTML = UPDATES.map(u => `<li><time>${esc(u.date)}</time><span><b>${esc(u.doc)}</b>: ${esc(u.text)}</span></li>`).join("");
 $("#yr").textContent = new Date().getFullYear();
 
