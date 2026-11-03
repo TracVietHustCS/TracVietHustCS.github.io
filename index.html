@@ -70,6 +70,21 @@ a{color:inherit}
 .spine .s{writing-mode:vertical-rl;font-size:12px;opacity:.9;margin-bottom:26px;white-space:nowrap}
 .spine .d,.spine .st{display:none}
 a.spine:hover,a.spine:focus-visible,.spine.soon:hover,.spine.soon:focus-visible{transform:translateY(-14px)}
+
+/* diện mạo riêng cho từng cuốn trên kệ */
+@font-face{font-family:"HanSeal";font-weight:600;font-style:normal;font-display:swap;src:url(data:font/woff2;base64,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) format("woff2")}
+.spine .em{position:absolute;top:6px;left:50%;transform:translateX(-50%);display:grid;place-items:center;width:20px;height:20px;line-height:1;font-size:14px;z-index:1}
+.spine.skin-night{background:linear-gradient(180deg,#1d1637 0%,#0d0a1b 100%);color:#f6d9a8;
+  box-shadow:inset -7px 0 0 rgba(0,0,0,.4),inset 2px 0 0 rgba(242,182,109,.28),0 0 26px -8px rgba(242,182,109,.5)}
+.spine.skin-night::before,.spine.skin-night::after{height:2px;background:linear-gradient(90deg,transparent,#f2b66d 30%,#f2b66d 70%,transparent)}
+.spine.skin-night .t{font-family:var(--voice);font-weight:600;font-size:22px;letter-spacing:.06em;color:#fbe3b8;text-shadow:0 0 14px rgba(242,182,109,.55)}
+.spine.skin-night .s{font-family:var(--voice);font-style:italic;font-size:13px;letter-spacing:.08em;color:#f2b66d;opacity:1}
+.spine.skin-night .em{width:19px;height:19px;border-radius:3px;background:#b3261e;color:#ffe9d6;font-family:"HanSeal","Noto Serif TC","Songti TC","PMingLiU",serif;font-weight:600;font-size:13px;transform:translateX(-50%) rotate(-5deg);box-shadow:inset 0 0 0 1.5px rgba(255,233,214,.55)}
+.spine.skin-lantern{background:linear-gradient(180deg,#ff9a4a 0%,#ff5d8f 100%);color:#2a1002;
+  box-shadow:inset -7px 0 0 rgba(42,16,2,.2),inset 2px 0 0 rgba(255,255,255,.32),0 0 24px -8px rgba(255,125,60,.6)}
+.spine.skin-lantern::before,.spine.skin-lantern::after{background:rgba(42,16,2,.38)}
+.spine.skin-lantern .t{font-weight:800;color:#2a1002}
+.spine.skin-lantern .s{opacity:.85}
 .spine.soon,.spine.empty{background:transparent;color:var(--muted);border:2px dashed var(--board-edge);box-shadow:none;border-bottom:0;cursor:default}
 .spine.soon::before,.spine.soon::after,.spine.empty::before,.spine.empty::after{background:var(--line)}
 .spine.soon .t{color:var(--ink);opacity:.75}
@@ -108,7 +123,8 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-bet
   .hero{padding:40px 0 18px}
   .shelf{flex-direction:column;align-items:stretch;gap:12px;padding:0;min-height:0}
   .board{display:none}
-  .spine{width:auto;height:auto;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;padding:16px 18px;border-radius:12px;box-shadow:none;text-align:left}
+  .spine .em{position:static;transform:none!important}
+.spine{width:auto;height:auto;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;padding:16px 18px;border-radius:12px;box-shadow:none;text-align:left}
   .spine::before,.spine::after{display:none}
   .spine .t,.spine .s{writing-mode:horizontal-tb;margin:0;white-space:normal}
   .spine .t{font-size:20px}
@@ -202,10 +218,10 @@ const DOCS = [
   { title:"LLMOps", sub:"notes", status:"live", url:"https://tracviethustcs.github.io/llmops-notes/", color:"#c2255c", h:250,
     meta:"17 trang", tags:["LLMOps","RAG","Agent","An toàn","12 câu luyện"],
     desc:"Kiến trúc ứng dụng LLM, quản lý prompt, RAG, đánh giá, agent và tool, phục vụ mô hình, gateway và chi phí, quan sát, prompt injection, fine-tuning và quản trị." },
-  { title:"Góc chơi", sub:"tử vi, game, món ngon", status:"live", url:"play/", color:"#ff7a2f", h:300,
+  { title:"Góc chơi", sub:"chợ đêm", status:"live", url:"play/", color:"#ff7a2f", skin:"lantern", emblem:"🏮", h:300,
     meta:"4 góc", tags:["Lá số Tử Vi","Đập bug","Rắn săn commit","Món ngon"],
     desc:"Lập lá số Tử Vi Đẩu Số, hai mini game nhỏ và góc món ăn ngon ở Thái Nguyên. Chạy hoàn toàn trong trình duyệt." },
-  { title:"9/8/2026", sub:"truyện dài", status:"live", url:"https://tracviethustcs.github.io/9-8-2026/", color:"#6b4bb8", h:252,
+  { title:"9/8/2026", sub:"Tuyệt Tình Truyện", status:"live", url:"https://tracviethustcs.github.io/9-8-2026/", color:"#1d1637", skin:"night", emblem:"情", h:316,
     meta:"Đang cập nhật", tags:["Truyện dài","Cập nhật từng phần"],
     desc:"Một câu chuyện dài, viết và đăng từng phần." },
   { title:"Claude", sub:"certifications", status:"soon", color:"#d97757", h:246,
@@ -217,6 +233,7 @@ const DOCS = [
   { empty:true, h:200 }
 ];
 const UPDATES = [
+  { date:"03/11/2026", doc:"Kệ sách", text:"Gáy sách 9/8/2026 và Góc chơi có diện mạo riêng, khớp với bìa mới." },
   { date:"03/11/2026", doc:"Góc chơi", text:"Giao diện mới cho Góc chơi: chợ đêm đèn lồng, có bản sáng và tối." },
   { date:"03/11/2026", doc:"9/8/2026", text:"Bìa mới cho 9/8/2026: đêm mưa, ô cửa sáng đèn, khung viền và con dấu." },
   { date:"03/11/2026", doc:"Góc chơi", text:"Thêm tab Món ngon: các quán ở Thái Nguyên." },
@@ -243,11 +260,11 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":
 
 const ITEMS = DOCS.map((d,i) => {
   if (d.empty) return `<li><div class="spine empty" style="--h:${d.h}px" tabindex="0" data-i="${i}"><span class="t">chỗ trống</span></div></li>`;
-  const inner = `<span class="t">${esc(d.title)}</span><span class="s">${esc(d.sub)}</span>` +
+  const inner = (d.emblem ? `<span class="em" aria-hidden="true">${esc(d.emblem)}</span>` : "") + `<span class="t">${esc(d.title)}</span><span class="s">${esc(d.sub)}</span>` +
     `<span class="d">${esc(d.desc)}</span><span class="st">${d.status==="live"?"Mở":"Sắp ra mắt"}</span>`;
   const style = `--h:${d.h}px;--c:${d.color}`;
   return d.status === "live"
-    ? `<li><a class="spine" style="${style}" href="${esc(d.url)}" data-i="${i}">${inner}</a></li>`
+    ? `<li><a class="spine${d.skin ? " skin-" + d.skin : ""}" style="${style}" href="${esc(d.url)}" data-i="${i}">${inner}</a></li>`
     : `<li><div class="spine soon${d.diary?" diary":""}" style="${style}" tabindex="0" data-i="${i}">${inner}</div></li>`;
 });
 
