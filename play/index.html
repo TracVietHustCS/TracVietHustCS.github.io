@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Góc chơi · Trác Việt</title>
+<meta name="description" content="Góc chơi của Trác Việt: lập lá số Tử Vi Đẩu Số, đập bug, rắn săn commit.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23C2255C'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' fill='white' text-anchor='middle'%3E%E2%98%85%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e9f0ee; --ink:#14262a; --muted:#566a6d; --line:#c3d1ce; --panel:#f6faf9;
+  --brand:#c2255c; --brand-ink:#ffffff; --good:#2b8a3e; --warn:#e67700; --bad:#c92a2a;
+  --ui:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --voice:"Newsreader",Georgia,"Times New Roman",serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0d1617;--ink:#e3edeb;--muted:#93a8a8;--line:#243536;--panel:#142021;--brand:#f06595;--brand-ink:#2a0a16;--good:#69db7c;--warn:#ffa94d;--bad:#ff8787;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#0d1617;--ink:#e3edeb;--muted:#93a8a8;--line:#243536;--panel:#142021;--brand:#f06595;--brand-ink:#2a0a16;--good:#69db7c;--warn:#ffa94d;--bad:#ff8787;color-scheme:dark}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.6}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.top a.back{text-decoration:none;color:var(--muted);font-size:15px}
+.top a.back:hover{color:var(--brand)}
+.top h1{font-family:var(--voice);font-weight:500;font-size:26px;margin:0}
+.btn{font:inherit;font-size:14px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.btn:hover{border-color:var(--brand)}
+.btn.pri{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:600;padding:10px 22px;font-size:15px}
+.btn:disabled{opacity:.5;cursor:default}
+.tabs{display:flex;gap:6px;margin:20px 0 18px;flex-wrap:wrap}
+.tabs button{font:inherit;font-weight:600;font-size:15px;padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+section[hidden]{display:none}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+h2{font-family:var(--voice);font-weight:500;font-size:24px;margin:0 0 6px}
+.muted{color:var(--muted);font-size:14.5px}
+.note{font-size:13.5px;color:var(--muted)}
+/* form */
+form.tv{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));align-items:end;margin-top:14px}
+label{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+input,select{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%}
+fieldset{border:0;margin:0;padding:0;display:flex;gap:16px;align-items:center;font-size:15px}
+fieldset legend{font-size:14px;color:var(--muted);padding:0;margin-bottom:4px}
+.lunar-only{display:none}
+form.tv.is-lunar .lunar-only{display:grid}
+form.tv.is-lunar .solar-only{display:none}
+.err{color:var(--bad);font-size:14.5px;margin-top:8px}
+/* summary */
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px 18px;margin:18px 0 14px}
+.sum div{font-size:14px}.sum b{display:block;font-size:12.5px;font-weight:500;color:var(--muted)}
+.viewbar{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:6px 0 10px}
+.viewbar .grp{display:flex;gap:6px}
+.chart-wrap{overflow-x:auto;border-radius:12px}
+.chart{display:grid;grid-template-columns:repeat(4,1fr);gap:0;min-width:700px;border:1.5px solid var(--ink);background:var(--panel)}
+.pal{border:1px solid var(--line);padding:7px 8px;min-height:150px;display:flex;flex-direction:column;gap:3px;cursor:pointer;position:relative;font-size:13px}
+.pal:hover{background:color-mix(in srgb,var(--brand) 6%,var(--panel))}
+.pal.sel{outline:2.5px solid var(--brand);outline-offset:-2.5px;z-index:2}
+.pal.rel{background:color-mix(in srgb,var(--brand) 11%,var(--panel))}
+.pal .h{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.pal .nm{font-weight:700;font-size:13.5px}
+.pal.soul .nm{color:var(--brand)}
+.pal .gz{color:var(--muted);font-size:12px;white-space:nowrap}
+.pal .mj{display:flex;flex-direction:column;gap:1px}
+.star{display:inline-flex;gap:4px;align-items:baseline;line-height:1.35}
+.star.major{font-weight:700;font-size:14px}
+.star.minor{font-size:12.5px;color:var(--ink)}
+.br{font-size:11px;font-weight:500;color:var(--muted)}
+.br.t1{color:var(--good)}.br.t3{color:var(--bad)}
+.mut{font-size:10.5px;font-weight:700;padding:0 5px;border-radius:5px;color:#fff;line-height:1.5}
+.mut.m0{background:#2b8a3e}.mut.m1{background:#1971c2}.mut.m2{background:#e67700}.mut.m3{background:#c92a2a}
+.pal .ft{margin-top:auto;display:flex;justify-content:space-between;color:var(--muted);font-size:11.5px;gap:6px}
+.tag{font-size:10.5px;font-weight:700;color:var(--brand-ink);background:var(--brand);padding:0 6px;border-radius:5px}
+.center{grid-row:2/4;grid-column:2/4;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;gap:4px;border:1px solid var(--line);font-size:14px}
+.center h3{font-family:var(--voice);font-weight:500;font-size:20px;margin:0 0 4px}
+.center div b{color:var(--muted);font-weight:500;font-size:12.5px}
+.list{display:grid;gap:10px}
+.list .pal{min-height:0;border:1px solid var(--line);border-radius:12px;font-size:14px;padding:11px 13px}
+details.how{margin-top:16px}
+details.how summary{cursor:pointer;font-weight:600}
+details.how p,details.how li{font-size:14.5px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);align-items:center;margin-top:8px}
+/* games */
+.gamebar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:6px 0 12px}
+.gamebar .score{font-weight:700}
+.holes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:420px;margin:0 auto}
+.hole{aspect-ratio:1;border-radius:50%;border:2px solid var(--line);background:color-mix(in srgb,var(--ink) 9%,var(--panel));font-size:42px;line-height:1;display:grid;place-items:center;cursor:pointer;color:inherit;padding:0}
+.hole.up{background:var(--panel);border-color:var(--brand)}
+.hole.hit{background:color-mix(in srgb,var(--good) 30%,var(--panel))}
+.hole.oops{background:color-mix(in srgb,var(--bad) 30%,var(--panel))}
+.snakewrap{display:grid;justify-items:center;gap:10px}
+canvas#snake{width:min(100%,360px);aspect-ratio:1;background:var(--panel);border:2px solid var(--ink);border-radius:8px;touch-action:none}
+.dpad{display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,56px);gap:6px}
+.dpad button{font-size:22px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.dpad .u{grid-column:2}.dpad .l{grid-row:2;grid-column:1}.dpad .d{grid-row:2;grid-column:2}.dpad .r{grid-row:2;grid-column:3}
+footer{margin:34px 0 40px;font-size:13px;color:var(--muted)}
+@media (max-width:560px){.wrap{padding:0 14px}.top h1{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="back" href="../">← Trác Việt</a>
+    <h1>Góc chơi</h1>
+    <button class="btn" id="theme" type="button" aria-label="Đổi giao diện sáng/tối">Sáng/Tối</button>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Chọn trò chơi">
+    <button role="tab" id="t-tuvi" aria-controls="p-tuvi" aria-selected="true" data-tab="tuvi">Tử vi</button>
+    <button role="tab" id="t-bug" aria-controls="p-bug" aria-selected="false" data-tab="bug">Đập bug</button>
+    <button role="tab" id="t-snake" aria-controls="p-snake" aria-selected="false" data-tab="snake">Rắn săn commit</button>
+  </div>
+
+  <!-- ===== TỬ VI ===== -->
+  <section id="p-tuvi" role="tabpanel" aria-labelledby="t-tuvi">
+    <div class="card">
+      <h2>Lập lá số Tử Vi Đẩu Số</h2>
+      <p class="muted">Điền ngày giờ sinh để an 12 cung, các sao chính, đại vận. Mọi thứ tính ngay trong trình duyệt của bạn, không gửi thông tin đi đâu cả.</p>
+      <form class="tv" id="tv-form" autocomplete="off" novalidate>
+        <fieldset style="grid-column:1/-1">
+          <legend>Loại ngày sinh</legend>
+          <label style="display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="radio" name="cal" value="solar" checked style="width:auto"> Dương lịch</label>
+          <label style="display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="radio" name="cal" value="lunar" style="width:auto"> Âm lịch</label>
+        </fieldset>
+        <label class="solar-only">Ngày sinh (dương lịch)<input type="date" id="f-date" min="1900-01-01" max="2100-12-31" value="2000-08-16" required></label>
+        <label class="lunar-only">Ngày (âm lịch)<input type="number" id="f-ld" min="1" max="30" value="17"></label>
+        <label class="lunar-only">Tháng (âm lịch)<input type="number" id="f-lm" min="1" max="12" value="7"></label>
+        <label class="lunar-only">Năm (âm lịch)<input type="number" id="f-ly" min="1900" max="2100" value="2000"></label>
+        <label class="lunar-only" style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="f-leap" style="width:auto"> Tháng nhuận</label>
+        <label>Giờ sinh
+          <select id="f-time">
+            <option value="0">Tý sớm (00:00 – 00:59)</option>
+            <option value="1">Sửu (01:00 – 02:59)</option>
+            <option value="2" selected>Dần (03:00 – 04:59)</option>
+            <option value="3">Mão (05:00 – 06:59)</option>
+            <option value="4">Thìn (07:00 – 08:59)</option>
+            <option value="5">Tỵ (09:00 – 10:59)</option>
+            <option value="6">Ngọ (11:00 – 12:59)</option>
+            <option value="7">Mùi (13:00 – 14:59)</option>
+            <option value="8">Thân (15:00 – 16:59)</option>
+            <option value="9">Dậu (17:00 – 18:59)</option>
+            <option value="10">Tuất (19:00 – 20:59)</option>
+            <option value="11">Hợi (21:00 – 22:59)</option>
+            <option value="12">Tý muộn (23:00 – 23:59)</option>
+          </select>
+        </label>
+        <label>Giới tính
+          <select id="f-gender"><option value="男">Nam</option><option value="女" selected>Nữ</option></select>
+        </label>
+        <label>Tên (không bắt buộc)<input type="text" id="f-name" maxlength="40" placeholder="Hiện ở giữa lá số"></label>
+        <div><button class="btn pri" type="submit" id="tv-go">Lập lá số</button></div>
+      </form>
+      <p class="err" id="tv-err" role="alert" hidden></p>
+    </div>
+
+    <div id="tv-out" hidden style="margin-top:16px">
+      <div class="card">
+        <div class="sum" id="tv-sum"></div>
+        <div class="viewbar">
+          <span class="muted">Bấm vào một cung để tô sáng các cung xung chiếu và tam hợp.</span>
+          <span class="grp">
+            <button class="btn" type="button" id="v-grid" aria-pressed="true">Lưới 12 cung</button>
+            <button class="btn" type="button" id="v-list" aria-pressed="false">Danh sách</button>
+            <button class="btn" type="button" id="v-adj" aria-pressed="false">Sao phụ nhỏ</button>
+          </span>
+        </div>
+        <div class="chart-wrap" id="tv-gridwrap"><div class="chart" id="tv-chart"></div></div>
+        <div class="list" id="tv-list" hidden></div>
+        <div class="legend">
+          <span><span class="mut m0">Lộc</span> Hoá Lộc</span><span><span class="mut m1">Quyền</span> Hoá Quyền</span>
+          <span><span class="mut m2">Khoa</span> Hoá Khoa</span><span><span class="mut m3">Kỵ</span> Hoá Kỵ</span>
+          <span>Miếu, Vượng, Đắc, Lợi, Bình, Hãm: độ sáng của sao</span>
+        </div>
+        <details class="how">
+          <summary>Cách đọc nhanh một lá số</summary>
+          <ul>
+            <li><b>12 cung</b> (Mệnh, Huynh Đệ, Phu Thê, Tử Nữ, Tài Bạch, Tật Ách, Thiên Di, Nô Bộc, Quan Lộc, Điền Trạch, Phúc Đức, Phụ Mẫu) là 12 lĩnh vực của đời người. Cung Mệnh là gốc; cung Thân là phần "hậu vận" nghiêng về.</li>
+            <li><b>Sao chính</b> (14 chính tinh như Tử Vi, Thiên Phủ, Thái Dương...) nói lên tính chất cốt lõi của cung. <b>Sao phụ</b> bổ sung sắc thái.</li>
+            <li><b>Tứ Hoá</b> (Lộc, Quyền, Khoa, Kỵ) thêm xu hướng thuận hay trở ngại cho sao mà nó đi kèm.</li>
+            <li><b>Đại vận</b>: con số dưới mỗi cung là khoảng tuổi (theo tuổi âm) mà cung đó "cầm lái" trong 10 năm.</li>
+            <li><b>Tam phương tứ chính</b>: một cung được đọc cùng với cung đối diện và hai cung hợp (cách nhau 4 cung); bấm vào cung để thấy.</li>
+          </ul>
+        </details>
+      </div>
+    </div>
+    <p class="note" style="margin-top:14px">Đây là trò giải trí và tham khảo văn hoá, <b>không phải căn cứ</b> để quyết định chuyện quan trọng (sức khoẻ, tiền bạc, hôn nhân, công việc). Lá số được tính bằng thư viện mã nguồn mở <a href="https://github.com/SylarLong/iztro" target="_blank" rel="noopener">iztro</a> theo cách an sao phổ biến; các trường phái (Bắc phái, Nam phái, Trung Châu, Phi Tinh...) có thể khác nhau ở một số chi tiết, và tên sao viết theo Hán Việt của thư viện, nên có thể khác chút so với sách hay phần mềm bạn quen dùng. Lưu ý riêng về <b>giờ Tý muộn (23:00 đến 23:59)</b>: thư viện mặc định tính sang ngày âm lịch hôm sau, còn một số trường phái giữ nguyên ngày hiện tại; nếu bạn sinh gần nửa đêm, hãy đối chiếu thêm.</p>
+  </section>
+
+  <!-- ===== ĐẬP BUG ===== -->
+  <section id="p-bug" role="tabpanel" aria-labelledby="t-bug" hidden>
+    <div class="card">
+      <h2>Đập bug</h2>
+      <p class="muted">Bug 🐛 chui lên thì đập nó (+1). Đừng đập nhầm server production 🔥 (−3). Thời gian 30 giây.</p>
+      <div class="gamebar">
+        <button class="btn pri" id="bug-start" type="button">Bắt đầu</button>
+        <span>Điểm: <span class="score" id="bug-score">0</span></span>
+        <span>Còn: <span class="score" id="bug-time">30</span>s</span>
+        <span class="muted">Kỷ lục: <span id="bug-best">0</span></span>
+      </div>
+      <div class="holes" id="holes"></div>
+      <p class="muted" id="bug-msg" role="status" aria-live="polite" style="text-align:center;margin-top:12px"></p>
+    </div>
+  </section>
+
+  <!-- ===== RẮN ===== -->
+  <section id="p-snake" role="tabpanel" aria-labelledby="t-snake" hidden>
+    <div class="card snakewrap">
+      <div style="justify-self:start"><h2>Rắn săn commit</h2>
+        <p class="muted">Điều khiển bằng phím mũi tên hoặc WASD, vuốt trên màn hình, hoặc các nút bên dưới. Ăn ô hồng (commit) để dài ra. Đừng đâm tường hay chính mình.</p></div>
+      <div class="gamebar" style="justify-self:start">
+        <button class="btn pri" id="sn-start" type="button">Chơi</button>
+        <span>Điểm: <span class="score" id="sn-score">0</span></span>
+        <span class="muted">Kỷ lục: <span id="sn-best">0</span></span>
+      </div>
+      <canvas id="snake" width="360" height="360" aria-label="Màn chơi rắn"></canvas>
+      <div class="dpad" aria-label="Nút điều khiển">
+        <button class="u" data-d="up" aria-label="Lên">▲</button>
+        <button class="l" data-d="left" aria-label="Trái">◀</button>
+        <button class="d" data-d="down" aria-label="Xuống">▼</button>
+        <button class="r" data-d="right" aria-label="Phải">▶</button>
+      </div>
+      <p class="muted" id="sn-msg" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <footer>
+    Thư viện bên thứ ba được đóng gói trong trang này: iztro (MIT) và các phụ thuộc của nó; xem <a href="THIRD-PARTY-LICENSES.txt">giấy phép</a>.
+  </footer>
+</div>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const LS = { get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }, set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
+
+/* --- giao diện sáng/tối --- */
+(function(){
+  const saved = LS.get("play-theme"); if (saved) document.documentElement.dataset.theme = saved;
+  $("#theme").addEventListener("click", () => {
+    const cur = document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light");
+    const next = cur === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = next; LS.set("play-theme", next);
+  });
+})();
+
+/* --- tab --- */
+const TABS = ["tuvi", "bug", "snake"];
+function openTab(name){
+  if (!TABS.includes(name)) name = "tuvi";
+  TABS.forEach(t => { $("#p-" + t).hidden = t !== name; $("#t-" + t).setAttribute("aria-selected", String(t === name)); });
+  if (name !== "bug") bugStop(true);
+  if (name !== "snake") snStop(true);
+}
+$$(".tabs button").forEach(b => b.addEventListener("click", () => { location.hash = b.dataset.tab; }));
+addEventListener("hashchange", () => openTab(location.hash.slice(1)));
+
+/* =================== TỬ VI =================== */
+let iztroLoading = null;
+function loadIztro(){
+  if (window.IZTRO) return Promise.resolve();
+  if (iztroLoading) return iztroLoading;
+  iztroLoading = new Promise((res, rej) => {
+    const s = document.createElement("script"); s.src = "iztro.bundle.js"; s.onload = res; s.onerror = () => { iztroLoading = null; rej(new Error("load")); };
+    document.head.appendChild(s);
+  });
+  return iztroLoading;
+}
+// Chỉ số cung của iztro (0 = Dần, tăng theo địa chi) -> vị trí trên lưới 4x4 truyền thống [hàng, cột]
+const POS = [[3,0],[2,0],[1,0],[0,0],[0,1],[0,2],[0,3],[1,3],[2,3],[3,3],[3,2],[3,1]];
+const MUT = { "Lộc": 0, "Quyền": 1, "Khoa": 2, "Kỵ": 3 };
+function brClass(b){ return /Miếu|Vượng/.test(b || "") ? "t1" : /Hãm/.test(b || "") ? "t3" : ""; }
+function starEl(s, kind){
+  const w = document.createElement("span"); w.className = "star " + kind;
+  const n = document.createElement("span"); n.textContent = s.name; w.appendChild(n);
+  if (s.brightness){ const b = document.createElement("span"); b.className = "br " + brClass(s.brightness); b.textContent = s.brightness; w.appendChild(b); }
+  if (s.mutagen && s.mutagen in MUT){ const m = document.createElement("span"); m.className = "mut m" + MUT[s.mutagen]; m.textContent = s.mutagen; w.appendChild(m); }
+  return w;
+}
+function palEl(p, opts){
+  const d = document.createElement("div"); d.className = "pal" + (p.name === opts.soulName ? " soul" : ""); d.dataset.i = p.index; d.tabIndex = 0; d.setAttribute("role", "button");
+  const h = document.createElement("div"); h.className = "h";
+  const nm = document.createElement("span"); nm.className = "nm"; nm.textContent = p.name;
+  if (p.isBodyPalace){ const t = document.createElement("span"); t.className = "tag"; t.textContent = "Thân"; t.style.marginLeft = "6px"; nm.appendChild(t); }
+  const gz = document.createElement("span"); gz.className = "gz"; gz.textContent = p.heavenlyStem + " " + p.earthlyBranch;
+  h.append(nm, gz);
+  const mj = document.createElement("div"); mj.className = "mj";
+  p.majorStars.forEach(s => mj.appendChild(starEl(s, "major")));
+  const mn = document.createElement("div"); mn.className = "mj";
+  p.minorStars.forEach(s => mn.appendChild(starEl(s, "minor")));
+  d.append(h, mj, mn);
+  if (opts.adj && p.adjectiveStars && p.adjectiveStars.length){
+    const a = document.createElement("div"); a.className = "mj";
+    p.adjectiveStars.forEach(s => { const e = document.createElement("span"); e.className = "star minor br"; e.textContent = s.name; a.appendChild(e); });
+    d.appendChild(a);
+  }
+  const ft = document.createElement("div"); ft.className = "ft";
+  const l = document.createElement("span"); l.textContent = p.changsheng12 || "";
+  const r = document.createElement("span"); r.textContent = p.decadal ? `Đại vận ${p.decadal.range[0]}–${p.decadal.range[1]}` : "";
+  ft.append(l, r); d.appendChild(ft);
+  return d;
+}
+let CUR = null;   // { astro, name }
+function renderChart(){
+  if (!CUR) return;
+  const a = CUR.astro, adj = $("#v-adj").getAttribute("aria-pressed") === "true";
+  const soul = a.palaces.find(p => p.earthlyBranch === a.earthlyBranchOfSoulPalace);
+  const opts = { adj, soulName: soul ? soul.name : "" };
+  const chart = $("#tv-chart"); chart.innerHTML = "";
+  a.palaces.forEach(p => { const e = palEl(p, opts); const [r, c] = POS[p.index]; e.style.gridRow = r + 1; e.style.gridColumn = c + 1; chart.appendChild(e); });
+  const ctr = document.createElement("div"); ctr.className = "center";
+  const add = (k, v) => { const x = document.createElement("div"); const b = document.createElement("b"); b.textContent = k + ": "; x.append(b, document.createTextNode(v)); ctr.appendChild(x); };
+  const h3 = document.createElement("h3"); h3.textContent = CUR.name ? "Lá số của " + CUR.name : "Lá số Tử Vi"; ctr.appendChild(h3);
+  add("Dương lịch", a.solarDate); add("Âm lịch", a.lunarDate); add("Tứ trụ", a.chineseDate); add("Giờ", `${a.time} (${a.timeRange})`); add("Cục", a.fiveElementsClass);
+  chart.appendChild(ctr);
+  // danh sách: bắt đầu từ cung Mệnh rồi đi theo thứ tự 12 cung (chỉ số giảm dần)
+  const list = $("#tv-list"); list.innerHTML = "";
+  const start = soul ? soul.index : 0;
+  for (let k = 0; k < 12; k++){ const i = ((start - k) % 12 + 12) % 12; list.appendChild(palEl(a.palaces[i], opts)); }
+  $("#tv-sum").innerHTML = "";
+  [["Dương lịch", a.solarDate], ["Âm lịch", a.lunarDate], ["Tứ trụ", a.chineseDate], ["Giờ sinh", `${a.time} (${a.timeRange})`],
+   ["Con giáp", a.zodiac], ["Cung hoàng đạo", a.sign], ["Cục", a.fiveElementsClass], ["Mệnh chủ", a.soul], ["Thân chủ", a.body],
+   ["Cung Mệnh an tại", a.earthlyBranchOfSoulPalace], ["Cung Thân an tại", a.earthlyBranchOfBodyPalace]].forEach(([k, v]) => {
+    const d = document.createElement("div"); const b = document.createElement("b"); b.textContent = k; d.append(b, document.createTextNode(v)); $("#tv-sum").appendChild(d);
+  });
+}
+function selectPalace(i){
+  if (!CUR) return;
+  let rel = [];
+  try { const s = CUR.astro.surroundedPalaces(+i); rel = [s.target, s.opposite, s.wealth, s.career].map(p => p.index); } catch (e) {}
+  $$("#tv-chart .pal, #tv-list .pal").forEach(e => {
+    const idx = +e.dataset.i;
+    e.classList.toggle("sel", idx === +i);
+    e.classList.toggle("rel", idx !== +i && rel.includes(idx));
+  });
+}
+["#tv-chart", "#tv-list"].forEach(sel => {
+  $(sel).addEventListener("click", e => { const p = e.target.closest(".pal"); if (p) selectPalace(p.dataset.i); });
+  $(sel).addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ const p = e.target.closest(".pal"); if (p){ e.preventDefault(); selectPalace(p.dataset.i); } } });
+});
+function setView(v){
+  const grid = v === "grid";
+  $("#tv-gridwrap").hidden = !grid; $("#tv-list").hidden = grid;
+  $("#v-grid").setAttribute("aria-pressed", String(grid)); $("#v-list").setAttribute("aria-pressed", String(!grid));
+}
+$("#v-grid").addEventListener("click", () => setView("grid"));
+$("#v-list").addEventListener("click", () => setView("list"));
+$("#v-adj").addEventListener("click", e => { const on = e.currentTarget.getAttribute("aria-pressed") !== "true"; e.currentTarget.setAttribute("aria-pressed", String(on)); renderChart(); });
+$$("input[name=cal]").forEach(r => r.addEventListener("change", () => $("#tv-form").classList.toggle("is-lunar", $("input[name=cal]:checked").value === "lunar")));
+$("#tv-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const err = $("#tv-err"), btn = $("#tv-go"); err.hidden = true;
+  btn.disabled = true; btn.textContent = "Đang tính…";
+  try {
+    await loadIztro();
+    const time = +$("#f-time").value, gender = $("#f-gender").value, lunar = $("input[name=cal]:checked").value === "lunar";
+    let a;
+    if (lunar) {
+      const d = +$("#f-ld").value, m = +$("#f-lm").value, y = +$("#f-ly").value;
+      if (!(d >= 1 && d <= 30 && m >= 1 && m <= 12 && y >= 1900 && y <= 2100)) throw new Error("Ngày âm lịch chưa hợp lệ.");
+      a = IZTRO.astro.byLunar(`${y}-${m}-${d}`, time, gender, $("#f-leap").checked, true, "vi-VN");
+    } else {
+      const v = $("#f-date").value; if (!v) throw new Error("Bạn chưa chọn ngày sinh.");
+      const [y, m, d] = v.split("-").map(Number);
+      if (!(y >= 1900 && y <= 2100 && m >= 1 && m <= 12 && d >= 1 && d <= 31)) throw new Error("Năm sinh cần nằm trong khoảng 1900 đến 2100.");
+      a = IZTRO.astro.bySolar(`${y}-${m}-${d}`, time, gender, true, "vi-VN");
+    }
+    CUR = { astro: a, name: ($("#f-name").value || "").trim().slice(0, 40) };
+    renderChart(); $("#tv-out").hidden = false;
+    setView(matchMedia("(max-width:700px)").matches ? "list" : "grid");
+    $("#tv-out").scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (ex) {
+    err.textContent = ex.message === "load" ? "Chưa tải được thư viện tính lá số, bạn thử lại nhé." : (ex.message && ex.message.length < 90 ? ex.message : "Chưa lập được lá số với ngày giờ này, bạn kiểm tra lại giúp mình (nếu là âm lịch: tháng nhuận có đúng không?).");
+    err.hidden = false;
+  } finally { btn.disabled = false; btn.textContent = "Lập lá số"; }
+});
+
+/* =================== ĐẬP BUG =================== */
+const holesEl = $("#holes");
+for (let i = 0; i < 9; i++){ const b = document.createElement("button"); b.type = "button"; b.className = "hole"; b.dataset.i = i; b.setAttribute("aria-label", "Hố " + (i + 1)); holesEl.appendChild(b); }
+let bug = { on: false, score: 0, left: 30, tick: null, spawn: null, kind: {}, timers: {} };
+$("#bug-best").textContent = LS.get("play-bug-best") || "0";
+function bugSet(i, kind){
+  const h = holesEl.children[i]; clearTimeout(bug.timers[i]);
+  if (!kind){ h.className = "hole"; h.textContent = ""; delete bug.kind[i]; return; }
+  bug.kind[i] = kind; h.className = "hole up"; h.textContent = kind === "bug" ? "🐛" : "🔥";
+  bug.timers[i] = setTimeout(() => bugSet(i, null), Math.max(450, 950 - (30 - bug.left) * 14));
+}
+function bugSpawn(){
+  if (!bug.on) return;
+  const free = [...holesEl.children].map((_, i) => i).filter(i => !bug.kind[i]);
+  if (free.length) bugSet(free[Math.floor(Math.random() * free.length)], Math.random() < 0.2 ? "prod" : "bug");
+  bug.spawn = setTimeout(bugSpawn, Math.max(260, 700 - (30 - bug.left) * 12));
+}
+holesEl.addEventListener("click", e => {
+  const h = e.target.closest(".hole"); if (!h || !bug.on) return;
+  const i = +h.dataset.i, k = bug.kind[i]; if (!k) return;
+  bug.score += k === "bug" ? 1 : -3; $("#bug-score").textContent = bug.score;
+  bugSet(i, null); h.classList.add(k === "bug" ? "hit" : "oops"); setTimeout(() => h.classList.remove("hit", "oops"), 160);
+});
+function bugStop(silent){
+  clearInterval(bug.tick); clearTimeout(bug.spawn); Object.values(bug.timers).forEach(clearTimeout);
+  const wasOn = bug.on; bug.on = false;
+  [...holesEl.children].forEach((_, i) => bugSet(i, null));
+  $("#bug-start").disabled = false; $("#bug-start").textContent = "Chơi lại";
+  if (wasOn && !silent){
+    const best = Math.max(+LS.get("play-bug-best") || 0, bug.score); LS.set("play-bug-best", String(best)); $("#bug-best").textContent = best;
+    $("#bug-msg").textContent = bug.score >= 20 ? `Hết giờ: ${bug.score} điểm. Code sạch bóng bug, chuẩn senior!` : bug.score >= 10 ? `Hết giờ: ${bug.score} điểm. Khá lắm, còn vài con bug ẩn nấp.` : `Hết giờ: ${bug.score} điểm. Bug còn nhiều lắm, chơi lại nhé!`;
+  }
+}
+$("#bug-start").addEventListener("click", () => {
+  bugStop(true); bug = Object.assign(bug, { on: true, score: 0, left: 30, kind: {}, timers: {} });
+  $("#bug-score").textContent = "0"; $("#bug-time").textContent = "30"; $("#bug-msg").textContent = ""; $("#bug-start").disabled = true; $("#bug-start").textContent = "Đang chơi…";
+  bug.tick = setInterval(() => { bug.left--; $("#bug-time").textContent = bug.left; if (bug.left <= 0) bugStop(false); }, 1000);
+  bugSpawn();
+});
+
+/* =================== RẮN SĂN COMMIT =================== */
+const cv = $("#snake"), cx = cv.getContext("2d"), N = 18, CELL = cv.width / N;
+let sn = null; $("#sn-best").textContent = LS.get("play-snake-best") || "0";
+function cssv(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function snDraw(){
+  cx.clearRect(0, 0, cv.width, cv.height);
+  cx.fillStyle = cssv("--panel") || "#f6faf9"; cx.fillRect(0, 0, cv.width, cv.height);
+  if (!sn) return;
+  cx.fillStyle = cssv("--brand") || "#c2255c"; cx.beginPath(); cx.roundRect(sn.food.x * CELL + 3, sn.food.y * CELL + 3, CELL - 6, CELL - 6, 5); cx.fill();
+  sn.body.forEach((s, i) => { cx.fillStyle = i === 0 ? (cssv("--good") || "#2b8a3e") : (cssv("--ink") || "#14262a"); cx.globalAlpha = i === 0 ? 1 : 0.78; cx.beginPath(); cx.roundRect(s.x * CELL + 1.5, s.y * CELL + 1.5, CELL - 3, CELL - 3, 5); cx.fill(); });
+  cx.globalAlpha = 1;
+}
+function snFood(){ let f; do { f = { x: Math.floor(Math.random() * N), y: Math.floor(Math.random() * N) }; } while (sn.body.some(s => s.x === f.x && s.y === f.y)); sn.food = f; }
+function snStop(silent){
+  if (!sn) return; clearInterval(sn.t); const was = sn.on; sn.on = false;
+  $("#sn-start").textContent = "Chơi lại";
+  if (was && !silent){
+    const best = Math.max(+LS.get("play-snake-best") || 0, sn.score); LS.set("play-snake-best", String(best)); $("#sn-best").textContent = best;
+    $("#sn-msg").textContent = `Game over: ${sn.score} điểm. ${sn.score >= 10 ? "Lịch sử commit đẹp đấy!" : "Merge conflict rồi, thử lại nhé."}`;
+  }
+}
+function snStep(){
+  if (!sn || !sn.on) return;
+  sn.dir = sn.next; const h = { x: sn.body[0].x + sn.dir.x, y: sn.body[0].y + sn.dir.y };
+  if (h.x < 0 || h.y < 0 || h.x >= N || h.y >= N || sn.body.some(s => s.x === h.x && s.y === h.y)){ snDraw(); snStop(false); return; }
+  sn.body.unshift(h);
+  if (h.x === sn.food.x && h.y === sn.food.y){ sn.score++; $("#sn-score").textContent = sn.score; snFood(); clearInterval(sn.t); sn.t = setInterval(snStep, Math.max(60, 130 - sn.score * 3)); }
+  else sn.body.pop();
+  snDraw();
+}
+const DIRS = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } };
+function snTurn(name){ if (!sn || !sn.on) return; const d = DIRS[name]; if (d.x === -sn.dir.x && d.y === -sn.dir.y) return; sn.next = d; }
+$("#sn-start").addEventListener("click", () => {
+  if (sn) clearInterval(sn.t);
+  sn = { on: true, score: 0, body: [{ x: 5, y: 9 }, { x: 4, y: 9 }, { x: 3, y: 9 }], dir: DIRS.right, next: DIRS.right };
+  snFood(); $("#sn-score").textContent = "0"; $("#sn-msg").textContent = ""; $("#sn-start").textContent = "Đang chơi…";
+  sn.t = setInterval(snStep, 130); snDraw();
+});
+addEventListener("keydown", e => {
+  if ($("#p-snake").hidden) return;
+  const m = { ArrowUp: "up", w: "up", W: "up", ArrowDown: "down", s: "down", S: "down", ArrowLeft: "left", a: "left", A: "left", ArrowRight: "right", d: "right", D: "right" }[e.key];
+  if (m){ e.preventDefault(); snTurn(m); }
+});
+$$(".dpad button").forEach(b => b.addEventListener("click", () => snTurn(b.dataset.d)));
+let tx = 0, ty = 0;
+cv.addEventListener("touchstart", e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+cv.addEventListener("touchend", e => {
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+  snTurn(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up"));
+}, { passive: true });
+snDraw();
+
+openTab(location.hash.slice(1));
+</script>
+</body>
+</html>
