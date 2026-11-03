@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Góc chơi · Trác Việt</title>
-<meta name="description" content="Góc chơi của Trác Việt: lập lá số Tử Vi Đẩu Số, đập bug, rắn săn commit.">
+<meta name="description" content="Góc chơi của Trác Việt: lá số Tử Vi, đập bug, rắn săn commit và góc món ăn ngon ở Thái Nguyên.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23C2255C'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' fill='white' text-anchor='middle'%3E%E2%98%85%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -100,6 +100,21 @@ canvas#snake{width:min(100%,360px);aspect-ratio:1;background:var(--panel);border
 .dpad{display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,56px);gap:6px}
 .dpad button{font-size:22px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
 .dpad .u{grid-column:2}.dpad .l{grid-row:2;grid-column:1}.dpad .d{grid-row:2;grid-column:2}.dpad .r{grid-row:2;grid-column:3}
+/* món ngon */
+.foods{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:14px}
+.food{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--panel);display:flex;flex-direction:column;gap:6px}
+.food.pick{outline:3px solid var(--brand);outline-offset:2px;animation:pop .4s ease}
+@keyframes pop{0%{transform:scale(.97)}60%{transform:scale(1.02)}100%{transform:scale(1)}}
+.food h3{font-family:var(--voice);font-weight:500;font-size:21px;margin:0}
+.food .kind{display:inline-block;font-size:12.5px;font-weight:600;color:var(--brand);background:color-mix(in srgb,var(--brand) 10%,transparent);padding:1px 10px;border-radius:999px;width:fit-content}
+.food .where{font-size:14px;color:var(--muted)}
+.food .sc{font-weight:700}
+.food .go{margin-top:auto;font-size:14px;font-weight:600;color:var(--brand);text-decoration:none}
+.food .go:hover{text-decoration:underline}
+.food .empty{font-size:13.5px;color:var(--muted);font-style:italic}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0}
+.chips button{font:inherit;font-size:13.5px;padding:3px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
 footer{margin:34px 0 40px;font-size:13px;color:var(--muted)}
 @media (max-width:560px){.wrap{padding:0 14px}.top h1{font-size:22px}}
 </style>
@@ -116,6 +131,7 @@ footer{margin:34px 0 40px;font-size:13px;color:var(--muted)}
     <button role="tab" id="t-tuvi" aria-controls="p-tuvi" aria-selected="true" data-tab="tuvi">Tử vi</button>
     <button role="tab" id="t-bug" aria-controls="p-bug" aria-selected="false" data-tab="bug">Đập bug</button>
     <button role="tab" id="t-snake" aria-controls="p-snake" aria-selected="false" data-tab="snake">Rắn săn commit</button>
+    <button role="tab" id="t-food" aria-controls="p-food" aria-selected="false" data-tab="food">Món ngon</button>
   </div>
 
   <!-- ===== TỬ VI ===== -->
@@ -230,11 +246,27 @@ footer{margin:34px 0 40px;font-size:13px;color:var(--muted)}
     </div>
   </section>
 
+  <!-- ===== MÓN NGON ===== -->
+  <section id="p-food" role="tabpanel" aria-labelledby="t-food" hidden>
+    <div class="card">
+      <h2>Góc món ăn ngon</h2>
+      <p class="muted">Những quán ở Thái Nguyên mình ghi lại. Điểm và nhận xét chỉ hiện khi mình đã tự chấm; quán nào chưa có thì mình chưa đánh giá, không bịa.</p>
+      <div class="gamebar" style="margin-top:10px">
+        <button class="btn pri" id="food-pick" type="button">Hôm nay ăn gì?</button>
+        <span class="muted" id="food-msg" role="status" aria-live="polite"></span>
+      </div>
+      <div class="chips" id="food-chips" aria-label="Lọc theo loại món"></div>
+      <div class="foods" id="foods"></div>
+      <p class="note" style="margin-top:14px">Giờ mở cửa, giá và địa chỉ có thể thay đổi: bấm "Xem trên Google Maps" để xem thông tin mới nhất và đánh giá của nhiều người.</p>
+    </div>
+  </section>
+
   <footer>
     Thư viện bên thứ ba được đóng gói trong trang này: iztro (MIT) và các phụ thuộc của nó; xem <a href="THIRD-PARTY-LICENSES.txt">giấy phép</a>.
   </footer>
 </div>
 
+<script src="food-data.js"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -251,7 +283,7 @@ const LS = { get(k){ try{ return localStorage.getItem(k); }catch(e){ return null
 })();
 
 /* --- tab --- */
-const TABS = ["tuvi", "bug", "snake"];
+const TABS = ["tuvi", "bug", "snake", "food"];
 function openTab(name){
   if (!TABS.includes(name)) name = "tuvi";
   TABS.forEach(t => { $("#p-" + t).hidden = t !== name; $("#t-" + t).setAttribute("aria-selected", String(t === name)); });
@@ -473,6 +505,45 @@ cv.addEventListener("touchend", e => {
   snTurn(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up"));
 }, { passive: true });
 snDraw();
+
+/* =================== MÓN NGON =================== */
+(function(){
+  const data = Array.isArray(window.FOOD) ? window.FOOD : [];
+  const box = $("#foods"), chips = $("#food-chips"); let filter = "Tất cả";
+  const kinds = ["Tất cả", ...new Set(data.map(d => d.kind))];
+  function mapsUrl(d){
+    const q = encodeURIComponent(d.name + " " + (d.place || "").split(":")[0]);
+    return "https://www.google.com/maps/search/?api=1&query=" + q + (d.mapsId ? "&query_place_id=" + encodeURIComponent(d.mapsId) : "");
+  }
+  function card(d){
+    const c = document.createElement("article"); c.className = "food";
+    const h = document.createElement("h3"); h.textContent = d.name;
+    const k = document.createElement("span"); k.className = "kind"; k.textContent = d.kind;
+    const w = document.createElement("div"); w.className = "where"; w.textContent = d.place || "";
+    c.append(h, k, w);
+    const hasMine = d.myScore != null || (d.mustTry && d.mustTry.length) || d.note;
+    if (d.myScore != null){ const sc = document.createElement("div"); sc.className = "sc"; sc.textContent = `Điểm của mình: ${d.myScore}/10`; c.appendChild(sc); }
+    if (d.mustTry && d.mustTry.length){ const m = document.createElement("div"); m.textContent = "Nên thử: " + d.mustTry.join(", "); c.appendChild(m); }
+    if (d.note){ const n = document.createElement("div"); n.className = "where"; n.textContent = d.note; c.appendChild(n); }
+    if (!hasMine){ const e = document.createElement("div"); e.className = "empty"; e.textContent = "Mình chưa đánh giá quán này."; c.appendChild(e); }
+    const a = document.createElement("a"); a.className = "go"; a.href = mapsUrl(d); a.target = "_blank"; a.rel = "noopener"; a.textContent = "Xem trên Google Maps →"; c.appendChild(a);
+    return c;
+  }
+  function render(){
+    box.innerHTML = ""; data.filter(d => filter === "Tất cả" || d.kind === filter).forEach(d => box.appendChild(card(d)));
+    $$("button", chips).forEach(b => b.setAttribute("aria-pressed", String(b.dataset.k === filter)));
+    $("#food-msg").textContent = "";
+  }
+  kinds.forEach(k => { const b = document.createElement("button"); b.type = "button"; b.dataset.k = k; b.textContent = k; b.addEventListener("click", () => { filter = k; render(); }); chips.appendChild(b); });
+  $("#food-pick").addEventListener("click", () => {
+    const cards = $$(".food", box); if (!cards.length) return;
+    cards.forEach(c => c.classList.remove("pick"));
+    const i = Math.floor(Math.random() * cards.length); cards[i].classList.add("pick"); cards[i].scrollIntoView({ behavior: "smooth", block: "center" });
+    $("#food-msg").textContent = "Hôm nay thử: " + cards[i].querySelector("h3").textContent + "!";
+  });
+  if (!data.length) $("#p-food .card").insertAdjacentHTML("beforeend", "<p class='muted'>Chưa có quán nào.</p>");
+  render();
+})();
 
 openTab(location.hash.slice(1));
 </script>
