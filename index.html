@@ -80,14 +80,6 @@ a.spine:hover,a.spine:focus-visible,.spine.soon:hover,.spine.soon:focus-visible{
 .spine.skin-night .t{font-family:var(--voice);font-weight:600;font-size:22px;letter-spacing:.06em;color:#fbe3b8;text-shadow:0 0 14px rgba(242,182,109,.55)}
 .spine.skin-night .s{font-family:var(--voice);font-style:italic;font-size:13px;letter-spacing:.08em;color:#f2b66d;opacity:1}
 .spine.skin-night .em{width:19px;height:19px;border-radius:3px;background:#b3261e;color:#ffe9d6;font-family:"HanSeal","Noto Serif TC","Songti TC","PMingLiU",serif;font-weight:600;font-size:13px;transform:translateX(-50%) rotate(-5deg);box-shadow:inset 0 0 0 1.5px rgba(255,233,214,.55)}
-.spine.soon.skin-glow{background:linear-gradient(180deg,#ffd166 0%,#ff9a8b 52%,#ff5d9e 100%);color:#2a0a2e;border:0;border-bottom:0;
-  box-shadow:inset -7px 0 0 rgba(42,10,46,.18),inset 2px 0 0 rgba(255,255,255,.4),0 0 28px -6px rgba(255,125,150,.65);animation:glowpulse 3.6s ease-in-out infinite}
-.spine.soon.skin-glow::before,.spine.soon.skin-glow::after{background:rgba(42,10,46,.34)}
-.spine.soon.skin-glow .t{color:#2a0a2e;opacity:1;font-weight:800}
-.spine.soon.skin-glow .s{color:#2a0a2e;opacity:.85}
-.spine.soon.skin-glow .em{font-size:16px;color:#fff8e1;text-shadow:0 0 8px rgba(255,255,255,.9)}
-@keyframes glowpulse{0%,100%{box-shadow:inset -7px 0 0 rgba(42,10,46,.18),inset 2px 0 0 rgba(255,255,255,.4),0 0 18px -8px rgba(255,125,150,.5)}50%{box-shadow:inset -7px 0 0 rgba(42,10,46,.18),inset 2px 0 0 rgba(255,255,255,.4),0 0 34px -2px rgba(255,170,120,.85)}}
-@media (prefers-reduced-motion:reduce){.spine.soon.skin-glow{animation:none}}
 .spine.skin-lantern{background:linear-gradient(180deg,#ff9a4a 0%,#ff5d8f 100%);color:#2a1002;
   box-shadow:inset -7px 0 0 rgba(42,16,2,.2),inset 2px 0 0 rgba(255,255,255,.32),0 0 24px -8px rgba(255,125,60,.6)}
 .spine.skin-lantern::before,.spine.skin-lantern::after{background:rgba(42,16,2,.38)}
@@ -232,9 +224,6 @@ const DOCS = [
   { title:"9/8/2026", sub:"Tuyệt Tình Truyện", status:"live", url:"https://tracviethustcs.github.io/9-8-2026/", color:"#1d1637", skin:"night", emblem:"情", h:316,
     meta:"Đang cập nhật", tags:["Truyện dài","Cập nhật từng phần"],
     desc:"Một câu chuyện dài, viết và đăng từng phần." },
-  { title:"Glow up", sub:"trả thù đời", status:"soon", color:"#ff9a8b", skin:"glow", emblem:"✦", h:268,
-    tags:["Skin care","Bóng rổ","Gym","Cardio","Học"],
-    desc:"Nhật ký glow up trả thù đời: skin care, bóng rổ, gym, cardio và học. Mình đang chuẩn bị, chưa viết." },
   { title:"Claude", sub:"certifications", status:"soon", color:"#d97757", h:246,
     tags:["Claude","Kiến trúc","Ôn thi"],
     desc:"Ghi chú ôn các chứng chỉ Claude, bắt đầu từ Architect – Foundations. Đang chuẩn bị." },
